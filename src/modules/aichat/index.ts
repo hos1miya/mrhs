@@ -207,7 +207,7 @@ export default class extends Module {
 			const relation = (await this.ai?.api("users/relation", {
 				userId: msg.userId,
 			})) as any[];
-			if (!relation?.[0]?.isFollowing) {
+			if (!relation?.isFollowing) {
 				this.log("The user is not following me:" + msg.userId);
 				msg.reply("あなたはaichatを実行する権限がありません。");
 				return false;
