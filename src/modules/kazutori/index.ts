@@ -29,7 +29,7 @@ export default class extends Module {
 
 	@bindThis
 	public install() {
-		this.games = this.ai.getCollection("kazutori");
+		this.games = this.subaru.getCollection("kazutori");
 
 		this.crawleGameEnd();
 		setInterval(this.crawleGameEnd, 1000);
@@ -64,7 +64,7 @@ export default class extends Module {
 			}
 		}
 
-		const post = await this.ai.post({
+		const post = await this.subaru.post({
 			text: serifs.kazutori.intro(limitMinutes),
 		});
 
@@ -170,7 +170,7 @@ export default class extends Module {
 
 		// お流れ
 		if (game.votes.length <= 1) {
-			this.ai.post({
+			this.subaru.post({
 				text: serifs.kazutori.onagare,
 				renoteId: game.postId,
 			});
@@ -197,7 +197,7 @@ export default class extends Module {
 			}
 		}
 
-		const winnerFriend = winner ? this.ai.lookupFriend(winner.id) : null;
+		const winnerFriend = winner ? this.subaru.lookupFriend(winner.id) : null;
 		const name = winnerFriend ? winnerFriend.name : null;
 
 		const text =
@@ -207,7 +207,7 @@ export default class extends Module {
 				? serifs.kazutori.finishWithWinner(acct(winner), name)
 				: serifs.kazutori.finishWithNoWinner);
 
-		this.ai.post({
+		this.subaru.post({
 			text: text,
 			cw: serifs.kazutori.finish,
 			renoteId: game.postId,

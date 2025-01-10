@@ -18,7 +18,7 @@ export default class extends Module {
 
 	@bindThis
 	public install() {
-		this.guesses = this.ai.getCollection("guessingGame", {
+		this.guesses = this.subaru.getCollection("guessingGame", {
 			indices: ["userId"],
 		});
 

@@ -1,5 +1,5 @@
 import { bindThis } from "@/decorators.js";
-import { HandlerResult } from "@/ai.js";
+import { HandlerResult } from "@/subaru.js";
 import Module from "@/module.js";
 import Message from "@/message.js";
 import serifs, { getSerif } from "@/serifs.js";
@@ -92,8 +92,8 @@ export default class extends Module {
 		) {
 			msg.reply(
 				msg.friend.love >= 7
-					? serifs.core.itterassyai.love(msg.friend.name)
-					: serifs.core.itterassyai.normal(msg.friend.name),
+					? serifs.core.itterassysubaru.love(msg.friend.name)
+					: serifs.core.itterassysubaru.normal(msg.friend.name),
 			);
 			incLove();
 			return true;
@@ -236,7 +236,7 @@ export default class extends Module {
 		// これは、「ハグ」と言って「ぎゅー」と返信したとき、相手が
 		// それに対してさらに「ぎゅー」と返信するケースがあったため。
 		// そうするとその「ぎゅー」に対してもマッチするため、また
-		// 藍がそれに返信してしまうことになり、少し不自然になる。
+		// すばるがそれに返信してしまうことになり、少し不自然になる。
 		// これを防ぐために前にハグしてから少し時間が経っていないと
 		// 返信しないようにする
 		const now = Date.now();
@@ -379,10 +379,10 @@ export default class extends Module {
 
 		msg.reply(
 			msg.friend.love >= 5
-				? serifs.core.breathinginai.love
+				? serifs.core.breathinginsubaru.love
 				: msg.friend.love <= 0
-					? serifs.core.breathinginai.hate
-					: serifs.core.breathinginai.normal,
+					? serifs.core.breathinginsubaru.hate
+					: serifs.core.breathinginsubaru.normal,
 		);
 
 		if (msg.friend.love <= 0) {

@@ -26,10 +26,10 @@ export default class extends Module {
 
 		const date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
-		const friends = this.ai.friends.find({} as any);
+		const friends = this.subaru.friends.find({} as any);
 
 		friends.forEach((f) => {
-			const friend = new Friend(this.ai, { doc: f });
+			const friend = new Friend(this.subaru, { doc: f });
 
 			// 親愛度が5以上必要
 			if (friend.love < 5) return;
@@ -43,7 +43,7 @@ export default class extends Module {
 
 			const text = serifs.valentine.chocolateForYou(friend.name);
 
-			this.ai.sendMessage(friend.userId, {
+			this.subaru.sendMessage(friend.userId, {
 				text: text,
 			});
 		});

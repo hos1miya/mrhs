@@ -8,7 +8,7 @@ const ReconnectingWebsocket =
 	_ReconnectingWebsocket as unknown as (typeof _ReconnectingWebsocket)["default"];
 
 /**
- * Misskey stream connection
+ * MissingKey stream connection
  */
 export default class Stream extends EventEmitter {
 	private stream: any;

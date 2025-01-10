@@ -1,21 +1,21 @@
 import { bindThis } from "@/decorators.js";
-import 藍, { InstallerResult } from "@/ai.js";
+import すばる, { InstallerResult } from "@/subaru.js";
 
 export default abstract class Module {
 	public abstract readonly name: string;
 
-	protected ai: 藍;
+	protected subaru: すばる;
 	private doc: any;
 
-	public init(ai: 藍) {
-		this.ai = ai;
+	public init(subaru: すばる) {
+		this.subaru = subaru;
 
-		this.doc = this.ai.moduleData.findOne({
+		this.doc = this.subaru.moduleData.findOne({
 			module: this.name,
 		});
 
 		if (this.doc == null) {
-			this.doc = this.ai.moduleData.insertOne({
+			this.doc = this.subaru.moduleData.insertOne({
 				module: this.name,
 				data: {},
 			});
@@ -26,7 +26,7 @@ export default abstract class Module {
 
 	@bindThis
 	protected log(msg: string) {
-		this.ai.log(`[${this.name}]: ${msg}`);
+		this.subaru.log(`[${this.name}]: ${msg}`);
 	}
 
 	/**
@@ -37,7 +37,7 @@ export default abstract class Module {
 	 */
 	@bindThis
 	protected subscribeReply(key: string | null, id: string, data?: any) {
-		this.ai.subscribeReply(this, key, id, data);
+		this.subaru.subscribeReply(this, key, id, data);
 	}
 
 	/**
@@ -46,7 +46,7 @@ export default abstract class Module {
 	 */
 	@bindThis
 	protected unsubscribeReply(key: string | null) {
-		this.ai.unsubscribeReply(this, key);
+		this.subaru.unsubscribeReply(this, key);
 	}
 
 	/**
@@ -57,7 +57,7 @@ export default abstract class Module {
 	 */
 	@bindThis
 	public setTimeoutWithPersistence(delay: number, data?: any) {
-		this.ai.setTimeoutWithPersistence(this, delay, data);
+		this.subaru.setTimeoutWithPersistence(this, delay, data);
 	}
 
 	@bindThis
@@ -68,6 +68,6 @@ export default abstract class Module {
 	@bindThis
 	protected setData(data: any) {
 		this.doc.data = data;
-		this.ai.moduleData.update(this.doc);
+		this.subaru.moduleData.update(this.doc);
 	}
 }

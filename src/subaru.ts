@@ -45,9 +45,9 @@ export type Meta = {
 };
 
 /**
- * 藍
+ * すばる
  */
-export default class 藍 {
+export default class すばる {
 	public readonly version = pkg._v;
 	public account: User;
 	public connection: Stream;
@@ -80,8 +80,8 @@ export default class 藍 {
 	public moduleData: loki.Collection<any>;
 
 	/**
-	 * 藍インスタンスを生成します
-	 * @param account 藍として使うアカウント
+	 * すばるインスタンスを生成します
+	 * @param account すばるとして使うアカウント
 	 * @param modules モジュール。先頭のモジュールほど高優先度
 	 */
 	constructor(account: User, modules: Module[]) {
@@ -157,7 +157,7 @@ export default class 藍 {
 		mainStream.on("mention", async (data) => {
 			if (data.userId == this.account.id) return; // 自分は弾く
 			if (data.text && data.text.startsWith("@" + this.account.username)) {
-				// Misskeyのバグで投稿が非公開扱いになる
+				// MissingKeyのバグで投稿が非公開扱いになる
 				if (data.text == null)
 					data = await this.api("notes/show", { noteId: data.id });
 				this.onReceiveMessage(new Message(this, data));
@@ -169,7 +169,7 @@ export default class 藍 {
 			if (data.userId == this.account.id) return; // 自分は弾く
 			if (data.text && data.text.startsWith("@" + this.account.username))
 				return;
-			// Misskeyのバグで投稿が非公開扱いになる
+			// MissingKeyのバグで投稿が非公開扱いになる
 			if (data.text == null)
 				data = await this.api("notes/show", { noteId: data.id });
 			this.onReceiveMessage(new Message(this, data));

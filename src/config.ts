@@ -16,7 +16,7 @@ type Config = {
 	prompt?: string;
 	replayPrompt?: string;
 	disableRandomReplies?: boolean;
-	aichatRandomProbability?: number;
+	denchatRandomProbability?: number;
 	mecab?: string;
 	mecabDic?: string;
 	memoryDir?: string;

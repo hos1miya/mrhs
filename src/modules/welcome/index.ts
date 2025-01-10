@@ -6,7 +6,7 @@ export default class extends Module {
 
 	@bindThis
 	public install() {
-		const tl = this.ai.connection.useSharedConnection("localTimeline");
+		const tl = this.subaru.connection.useSharedConnection("localTimeline");
 
 		tl.on("note", this.onLocalNote);
 
@@ -17,13 +17,13 @@ export default class extends Module {
 	private onLocalNote(note: any) {
 		if (note.isFirstNote) {
 			setTimeout(() => {
-				this.ai.api("notes/create", {
+				this.subaru.api("notes/create", {
 					renoteId: note.id,
 				});
 			}, 3000);
 
 			setTimeout(() => {
-				this.ai.api("notes/reactions/create", {
+				this.subaru.api("notes/reactions/create", {
 					noteId: note.id,
 					reaction: "congrats",
 				});

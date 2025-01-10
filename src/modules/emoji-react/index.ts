@@ -14,7 +14,7 @@ export default class extends Module {
 
 	@bindThis
 	public install() {
-		this.htl = this.ai.connection.useSharedConnection("homeTimeline");
+		this.htl = this.subaru.connection.useSharedConnection("homeTimeline");
 		this.htl.on("note", this.onNote);
 
 		return {};
@@ -30,7 +30,7 @@ export default class extends Module {
 			if (!immediate) {
 				await sleep(1500);
 			}
-			this.ai.api("notes/reactions/create", {
+			this.subaru.api("notes/reactions/create", {
 				noteId: note.id,
 				reaction: reaction,
 			});
@@ -82,6 +82,6 @@ export default class extends Module {
 		if (includes(note.text, ["ねこ", "cat"])) return react("😺");
 		if (includes(note.text, ["いぬ", "dog"])) return react("🐶");
 
-		if (includes(note.text, ["藍"])) return react("🙌");
+		if (includes(note.text, ["すばる"])) return react("🙌");
 	}
 }

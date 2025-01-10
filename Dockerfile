@@ -27,9 +27,9 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-COPY . /ai
+COPY . /subaru
 
-WORKDIR /ai
+WORKDIR /subaru
 RUN npm install && npm run build || test -f ./built/index.js
 
 ENTRYPOINT ["/usr/bin/tini", "--"]

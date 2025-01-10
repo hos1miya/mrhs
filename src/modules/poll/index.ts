@@ -112,8 +112,8 @@ export default class extends Module {
 			],
 			["絵文字になってほしいもの", "絵文字になってほしいものはどれですか？"],
 			[
-				"Misskey本部にありそうなもの",
-				"みなさんは、Misskey本部にありそうなものはどれだと思いますか？",
+				"MissingKey本部にありそうなもの",
+				"みなさんは、MissingKey本部にありそうなものはどれだと思いますか？",
 			],
 			["燃えるゴミ", "みなさんは、どれが燃えるゴミだと思いますか？"],
 			["好きなおにぎりの具", "みなさんの好きなおにぎりの具はなんですか？"],
@@ -123,7 +123,7 @@ export default class extends Module {
 
 		const choices = [genItem(), genItem(), genItem(), genItem()];
 
-		const note = await this.ai.post({
+		const note = await this.subaru.post({
 			text: poll[1],
 			poll: {
 				choices,
@@ -154,7 +154,7 @@ export default class extends Module {
 
 	@bindThis
 	private async timeoutCallback({ title, noteId }) {
-		const note: Note = await this.ai.api("notes/show", { noteId });
+		const note: Note = await this.subaru.api("notes/show", { noteId });
 
 		const choices = note.poll!.choices;
 
@@ -176,13 +176,13 @@ export default class extends Module {
 		);
 
 		if (mostVotedChoice.votes === 0) {
-			this.ai.post({
+			this.subaru.post({
 				// TODO: Extract serif
 				text: "投票はありませんでした",
 				renoteId: noteId,
 			});
 		} else if (mostVotedChoices.length === 1) {
-			this.ai.post({
+			this.subaru.post({
 				// TODO: Extract serif
 				cw: `${title}アンケートの結果発表です！`,
 				text: `結果は${mostVotedChoice.votes}票の「${mostVotedChoice.text}」でした！`,
@@ -192,7 +192,7 @@ export default class extends Module {
 			const choices = mostVotedChoices
 				.map((choice) => `「${choice.text}」`)
 				.join("と");
-			this.ai.post({
+			this.subaru.post({
 				// TODO: Extract serif
 				cw: `${title}アンケートの結果発表です！`,
 				text: `結果は${mostVotedChoice.votes}票の${choices}でした！`,

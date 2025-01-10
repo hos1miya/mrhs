@@ -1,5 +1,5 @@
 import { bindThis } from "@/decorators.js";
-import 藍 from "@/ai.js";
+import すばる from "@/subaru.js";
 import IModule from "@/module.js";
 import getDate from "@/utils/get-date.js";
 import type { User } from "@/misskey/user.js";
@@ -19,7 +19,7 @@ export type FriendDoc = {
 };
 
 export default class Friend {
-	private ai: 藍;
+	private subaru: すばる;
 
 	public get userId() {
 		return this.doc.userId;
@@ -39,16 +39,16 @@ export default class Friend {
 
 	public doc: FriendDoc;
 
-	constructor(ai: 藍, opts: { user?: User; doc?: FriendDoc }) {
-		this.ai = ai;
+	constructor(subaru: すばる, opts: { user?: User; doc?: FriendDoc }) {
+		this.subaru = subaru;
 
 		if (opts.user) {
-			const exist = this.ai.friends.findOne({
+			const exist = this.subaru.friends.findOne({
 				userId: opts.user.id,
 			});
 
 			if (exist == null) {
-				const inserted = this.ai.friends.insertOne({
+				const inserted = this.subaru.friends.insertOne({
 					userId: opts.user.id,
 					user: opts.user,
 				});
@@ -129,7 +129,7 @@ export default class Friend {
 		this.doc.todayLoveIncrements = (this.doc.todayLoveIncrements || 0) + amount;
 		this.save();
 
-		this.ai.log(`💗 ${this.userId} +${amount}`);
+		this.subaru.log(`💗 ${this.userId} +${amount}`);
 	}
 
 	@bindThis
@@ -150,7 +150,7 @@ export default class Friend {
 
 		this.save();
 
-		this.ai.log(`💢 ${this.userId} -${amount}`);
+		this.subaru.log(`💢 ${this.userId} -${amount}`);
 	}
 
 	@bindThis
@@ -165,7 +165,7 @@ export default class Friend {
 
 		await this.save(); // awaitを追加
 
-		this.ai.log(`💗 ${this.userId} (forced) set to ${amount}`);
+		this.subaru.log(`💗 ${this.userId} (forced) set to ${amount}`);
 	}
 
 	@bindThis
@@ -190,7 +190,7 @@ export default class Friend {
 
 	@bindThis
 	public save() {
-		this.ai.friends.update(this.doc);
+		this.subaru.friends.update(this.doc);
 	}
 
 	@bindThis
@@ -205,7 +205,7 @@ export default class Friend {
 
 	@bindThis
 	public transferMemory(code: string): boolean {
-		const src = this.ai.friends.findOne({
+		const src = this.subaru.friends.findOne({
 			transferCode: code,
 		});
 

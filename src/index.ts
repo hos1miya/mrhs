@@ -5,7 +5,7 @@ import chalk from "chalk";
 import got from "got";
 import promiseRetry from "promise-retry";
 
-import 藍 from "./ai.js";
+import すばる from "./subaru.js";
 import config from "./config.js";
 import _log from "./utils/log.js";
 // import pkg from '../package.json' assert { type: 'json' };
@@ -38,7 +38,7 @@ import PollModule from './modules/poll/index.js';
 import ReminderModule from "./modules/reminder/index.js";
 import CheckCustomEmojisModule from "./modules/check-custom-emojis/index.js";
 import EarthQuakeWarningModule from "./modules/earthquake_warning/index.js";
-import AiChatModule from "./modules/aichat/index.js";
+import DenChatModule from "./modules/denchat/index.js";
 
 console.log("   __    ____  _____  ___ ");
 console.log("  /__\\  (_  _)(  _  )/ __)");
@@ -83,9 +83,9 @@ promiseRetry(
 
 		log("Starting AiOS...");
 
-		// 藍起動
+		// すばる起動
 		// @ts-ignore
-		new 藍(account, [
+		new すばる(account, [
 			new CoreModule(),
 			new EmojiModule(),
 			new EmojiReactModule(),
@@ -111,7 +111,7 @@ promiseRetry(
 			new ReminderModule(),
 			new CheckCustomEmojisModule(),
 			new EarthQuakeWarningModule(),
-			new AiChatModule(),
+			new DenChatModule(),
 		]);
 	})
 	.catch((e) => {

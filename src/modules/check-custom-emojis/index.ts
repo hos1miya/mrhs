@@ -16,7 +16,7 @@ export default class extends Module {
 	@bindThis
 	public install() {
 		if (!config.checkEmojisEnabled) return {};
-		this.lastEmoji = this.ai.getCollection("lastEmoji", {
+		this.lastEmoji = this.subaru.getCollection("lastEmoji", {
 			indices: ["id"],
 		});
 
@@ -65,13 +65,13 @@ export default class extends Module {
 		if (!config.checkEmojisAtOnce) {
 			// 概要について投稿
 			this.log(serifs.checkCustomEmojis.post(server_name, emojiSize));
-			await this.ai.post({
+			await this.subaru.post({
 				text: serifs.checkCustomEmojis.post(server_name, emojiSize),
 			});
 
 			// 各絵文字について投稿
 			for (const emoji of emojisData) {
-				await this.ai.post({
+				await this.subaru.post({
 					text: serifs.checkCustomEmojis.emojiPost(emoji.name),
 				});
 				this.log(serifs.checkCustomEmojis.emojiPost(emoji.name));
@@ -88,7 +88,7 @@ export default class extends Module {
 				text,
 			);
 			this.log(message);
-			await this.ai.post({
+			await this.subaru.post({
 				text: message,
 			});
 		}
@@ -109,13 +109,13 @@ export default class extends Module {
 		let emojisData;
 		if (lastId != null) {
 			this.log("lastId is **not** null");
-			emojisData = await this.ai.api("admin/emoji/list", {
+			emojisData = await this.subaru.api("admin/emoji/list", {
 				sinceId: lastId,
 				limit: 30,
 			});
 		} else {
 			this.log("lastId is null");
-			emojisData = await this.ai.api("admin/emoji/list", {
+			emojisData = await this.subaru.api("admin/emoji/list", {
 				limit: 100,
 			});
 
@@ -125,7 +125,7 @@ export default class extends Module {
 			while (emojisData.length == 100 && beforeEmoji != afterEmoji) {
 				const lastId = emojisData[emojisData.length - 1].id;
 				// sinceIdを指定して再度取り直す
-				emojisData = await this.ai.api("admin/emoji/list", {
+				emojisData = await this.subaru.api("admin/emoji/list", {
 					limit: 100,
 					sinceId: lastId,
 				});

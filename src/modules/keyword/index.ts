@@ -24,7 +24,7 @@ export default class extends Module {
 	public install() {
 		if (!config.keywordEnabled) return {};
 
-		this.learnedKeywords = this.ai.getCollection("_keyword_learnedKeywords", {
+		this.learnedKeywords = this.subaru.getCollection("_keyword_learnedKeywords", {
 			indices: ["userId"],
 		});
 
@@ -35,13 +35,13 @@ export default class extends Module {
 
 	@bindThis
 	private async learn() {
-		const tl = await this.ai.api("notes/hybrid-timeline", {
+		const tl = await this.subaru.api("notes/hybrid-timeline", {
 			limit: 30,
 		});
 
 		const interestedNotes = tl.filter(
 			(note) =>
-				note.userId !== this.ai.account.id &&
+				note.userId !== this.subaru.account.id &&
 				note.text != null &&
 				note.cw == null &&
 				(note.visibility === "public" || note.visibility === "home"),
@@ -81,7 +81,7 @@ export default class extends Module {
 			text = serifs.keyword.learned(keyword[0], kanaToHira(keyword[8]));
 		}
 
-		this.ai.post({
+		this.subaru.post({
 			text: text,
 		});
 	}

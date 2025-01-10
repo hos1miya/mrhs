@@ -7,7 +7,7 @@ import urlToBase64 from "@/utils/url2base64.js";
 import got from "got";
 import { Note } from "@/misskey/note.js";
 
-type AiChat = {
+type DenChat = {
 	question: string;
 	prompt: string;
 	api: string;
@@ -23,7 +23,7 @@ const GEMINI_API_ENDPOINT =
 	"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent";
 
 export default class extends Module {
-	public readonly name = "aichat";
+	public readonly name = "denchat";
 	private repliedNoteIds: Set<string> = new Set();
 
 	@bindThis
@@ -35,7 +35,7 @@ export default class extends Module {
 	}
 
 	@bindThis
-	private async genTextByGemini(aiChat: AiChat, image: Base64Image | null) {
+	private async genTextByGemini(denChat: DenChat, image: Base64Image | null) {
 		this.log("Generate Text By Gemini...");
 		let parts: (
 			| { text: string; inline_data?: undefined }
@@ -43,10 +43,10 @@ export default class extends Module {
 		)[];
 
 		if (image === null) {
-			parts = [{ text: aiChat.prompt + aiChat.question }];
+			parts = [{ text: denChat.prompt + denChat.question }];
 		} else {
 			parts = [
-				{ text: aiChat.prompt + aiChat.question },
+				{ text: denChat.prompt + denChat.question },
 				{
 					inline_data: {
 						mime_type: image.type,
@@ -57,9 +57,9 @@ export default class extends Module {
 		}
 
 		const options = {
-			url: aiChat.api,
+			url: denChat.api,
 			searchParams: {
-				key: aiChat.key,
+				key: denChat.key,
 			},
 			json: {
 				contents: { parts: parts },
@@ -89,7 +89,7 @@ export default class extends Module {
 
 	@bindThis
 	private async note2base64Image(notesId: string) {
-		const noteData: any = await this.ai!.api("notes/show", { noteId: notesId });
+		const noteData: any = await this.subaru!.api("notes/show", { noteId: notesId });
 		let fileType: string | undefined, thumbnailUrl: string | undefined;
 
 		if (noteData?.files?.[0]) {
@@ -117,25 +117,25 @@ export default class extends Module {
     if (!config || config.disableRandomReplies) return false;
 
 		// random
-		const random = config.aichatRandomProbability || 0.4;
+		const random = config.denchatRandomProbability || 0.4;
 		if (Math.random() > random) return false;
 
-		const tl = (await this.ai?.api("notes/hybrid-timeline", {
+		const tl = (await this.subaru?.api("notes/hybrid-timeline", {
 			limit: 10,
 		})) as Note[];
 
 		const interestedNotes = await Promise.all(
 			tl.map(async (note) => {
-				const noteDetails = (await this.ai?.api("notes/show", {
+				const noteDetails = (await this.subaru?.api("notes/show", {
 					noteId: note.id,
 				})) as Note;
-				const relation = (await this.ai?.api("users/relation", {
+				const relation = (await this.subaru?.api("users/relation", {
 					userId: note.userId,
 				})) as any;
 				return {
 					note,
 					isInterested:
-						note.userId !== this.ai?.account.id &&
+						note.userId !== this.subaru?.account.id &&
 						note.text != null &&
 						note.cw == null &&
 						noteDetails.reply !== null &&
@@ -159,7 +159,7 @@ export default class extends Module {
 
 		let prompt = config.prompt || "";
 		try {
-			const userData = await this.ai?.api("users/show", {
+			const userData = await this.subaru?.api("users/show", {
 				userId: note.userId,
 			});
 			const name = userData?.name || userData?.username || "名無し";
@@ -169,14 +169,14 @@ export default class extends Module {
 		}
 		const base64Image = await this.note2base64Image(note.id);
 
-		const aiChat = {
+		const denChat = {
 			question: note.text!,
 			prompt: prompt,
 			api: GEMINI_API_ENDPOINT,
 			key: config.geminiApiKey,
 		};
 
-		const text = await this.genTextByGemini(aiChat, base64Image);
+		const text = await this.genTextByGemini(denChat, base64Image);
 
 		if (text == null) {
 			this.log(
@@ -186,8 +186,8 @@ export default class extends Module {
 		}
 
 		this.log("Replying...");
-		this.ai?.post({
-			text: serifs.aichat.post(text),
+		this.subaru?.post({
+			text: serifs.denchat.post(text),
 			replyId: note.id,
 	});
 	this.repliedNoteIds.add(note.id); // 返信したノートを記録する
@@ -197,19 +197,19 @@ export default class extends Module {
 	private async mentionHook(msg: Message) {
 		if (
 			msg.includes([this.name]) ||
-			(((await this.ai?.api("notes/show", { noteId: msg.replyId })) as Note)
-				?.userId === this.ai?.account.id &&
+			(((await this.subaru?.api("notes/show", { noteId: msg.replyId })) as Note)
+				?.userId === this.subaru?.account.id &&
 				(
-					(await this.ai?.api("notes/show", { noteId: msg.replyId })) as Note
+					(await this.subaru?.api("notes/show", { noteId: msg.replyId })) as Note
 				).text?.includes(this.name))
 		) {
-			this.log("AiChat requested");
-			const relation = (await this.ai?.api("users/relation", {
+			this.log("DenChat requested");
+			const relation = (await this.subaru?.api("users/relation", {
 				userId: msg.userId,
 			})) as any[];
 			if (!relation?.isFollowing) {
 				this.log("The user is not following me:" + msg.userId);
-				msg.reply("あなたはaichatを実行する権限がありません。");
+				msg.reply("あなたはdenchatを実行する権限がありません。");
 				return false;
 			}
 		} else {
@@ -225,7 +225,7 @@ export default class extends Module {
 
 		// ユーザー名の置換を先に行う
 		try {
-			const userData = await this.ai?.api("users/show", { userId: msg.userId });
+			const userData = await this.subaru?.api("users/show", { userId: msg.userId });
 			const name = userData?.name || userData?.username || "名無し";
 			prompt = prompt.replace("{name}", name);
 		} catch (err: unknown) {
@@ -234,36 +234,36 @@ export default class extends Module {
 
 		// 返信先の処理とプロンプトの連結
 		if (msg.replyId) {
-			const parentNote = (await this.ai?.api("notes/show", {
+			const parentNote = (await this.subaru?.api("notes/show", {
 				noteId: msg.replyId,
 			})) as Note;
-			if (parentNote?.userId === this.ai?.account.id && parentNote.text) {
+			if (parentNote?.userId === this.subaru?.account.id && parentNote.text) {
 				// 親メッセージが自分の場合、replayPromptを使用
 				question = replayPrompt + parentNote.text + "\n" + question;
 			}
 		}
 
 		if (!config.geminiApiKey) {
-			msg.reply(serifs.aichat.nothing);
+			msg.reply(serifs.denchat.nothing);
 			return false;
 		}
 
 		const base64Image = await this.note2base64Image(msg.id);
 
-		const aiChat = {
+		const denChat = {
 			question: question,
 			prompt: prompt,
 			api: GEMINI_API_ENDPOINT,
 			key: config.geminiApiKey,
 		};
 
-		const text = await this.genTextByGemini(aiChat, base64Image);
+		const text = await this.genTextByGemini(denChat, base64Image);
 
 		if (text == null) {
 			this.log(
 					"The result is invalid. It seems that tokens and other items need to be reviewed.",
 			);
-			msg.reply(serifs.aichat.error);
+			msg.reply(serifs.denchat.error);
 			return false;
 		}
 
@@ -273,7 +273,7 @@ export default class extends Module {
 				msg.reply(text);
 		} else {
 				// 通常投稿にはタグを追加
-				msg.reply(serifs.aichat.post(text));
+				msg.reply(serifs.denchat.post(text));
 		}
 
 		return {

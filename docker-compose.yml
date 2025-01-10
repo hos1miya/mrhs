@@ -10,7 +10,7 @@ services:
     environment:
       - TZ=Asia/Tokyo
     volumes:
-      - './config.json:/ai/config.json:ro'
-      - './font.ttf:/ai/font.ttf:ro'
-      - './data:/ai/data'
+      - './config.json:/subaru/config.json:ro'
+      - './font.ttf:/subaru/font.ttf:ro'
+      - './data:/subaru/data'
     restart: always

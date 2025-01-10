@@ -1,7 +1,7 @@
 import { bindThis } from "@/decorators.js";
 import chalk from "chalk";
 
-import 藍 from "@/ai.js";
+import すばる from "@/subaru.js";
 import Friend from "@/friend.js";
 import type { User } from "@/misskey/user.js";
 import includes from "@/utils/includes.js";
@@ -10,7 +10,7 @@ import config from "@/config.js";
 import { sleep } from "@/utils/sleep.js";
 
 export default class Message {
-	private ai: 藍;
+	private subaru: すばる;
 	private note: any;
 
 	public get id(): string {
@@ -43,8 +43,8 @@ export default class Message {
 	public get extractedText(): string {
 		const host = new URL(config.host).host.replace(/\./g, "\\.");
 		return this.text
-			.replace(new RegExp(`^@${this.ai.account.username}@${host}\\s`, "i"), "")
-			.replace(new RegExp(`^@${this.ai.account.username}\\s`, "i"), "")
+			.replace(new RegExp(`^@${this.subaru.account.username}@${host}\\s`, "i"), "")
+			.replace(new RegExp(`^@${this.subaru.account.username}\\s`, "i"), "")
 			.trim();
 	}
 
@@ -54,14 +54,14 @@ export default class Message {
 
 	public friend: Friend;
 
-	constructor(ai: 藍, note: any) {
-		this.ai = ai;
+	constructor(subaru: すばる, note: any) {
+		this.subaru = subaru;
 		this.note = note;
 
-		this.friend = new Friend(ai, { user: this.user });
+		this.friend = new Friend(subaru, { user: this.user });
 
 		// メッセージなどに付いているユーザー情報は省略されている場合があるので完全なユーザー情報を持ってくる
-		this.ai
+		this.subaru
 			.api("users/show", {
 				userId: this.userId,
 			})
@@ -82,13 +82,13 @@ export default class Message {
 	) {
 		if (text == null) return;
 
-		this.ai.log(`>>> Sending reply to ${chalk.underline(this.id)}`);
+		this.subaru.log(`>>> Sending reply to ${chalk.underline(this.id)}`);
 
 		if (!opts?.immediate) {
 			await sleep(2000);
 		}
 
-		return await this.ai.post({
+		return await this.subaru.post({
 			replyId: this.note.id,
 			text: text,
 			fileIds: opts?.file ? [opts?.file.id] : undefined,

@@ -36,7 +36,7 @@ export default class extends Module {
 		const file = await this.genMazeFile(date);
 
 		this.log("Posting...");
-		this.ai.post({
+		this.subaru.post({
 			text: serifs.maze.post,
 			fileIds: [file.id],
 		});
@@ -51,7 +51,7 @@ export default class extends Module {
 		const data = renderMaze(seed, maze);
 
 		this.log("Image uploading...");
-		const file = await this.ai.upload(data, {
+		const file = await this.subaru.upload(data, {
 			filename: "maze.png",
 			contentType: "image/png",
 		});
@@ -80,7 +80,7 @@ export default class extends Module {
 			)
 				size = "hard";
 			if (msg.includes(["死", "鬼", "地獄"])) size = "veryHard";
-			if (msg.includes(["藍"]) && msg.includes(["本気"])) size = "ai";
+			if (msg.includes(["すばる"]) && msg.includes(["本気"])) size = "subaru";
 			this.log("Maze requested");
 			setTimeout(async () => {
 				const file = await this.genMazeFile(Date.now(), size);

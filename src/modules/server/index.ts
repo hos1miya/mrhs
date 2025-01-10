@@ -20,7 +20,7 @@ export default class extends Module {
 	public install() {
 		if (!config.serverMonitoring) return {};
 
-		this.connection = this.ai.connection.useSharedConnection("serverStats");
+		this.connection = this.subaru.connection.useSharedConnection("serverStats");
 		this.connection.on("stats", this.onStats);
 
 		setInterval(() => {
@@ -72,7 +72,7 @@ export default class extends Module {
 		this.lastWarnedAt = now;
 		//#endregion
 
-		this.ai.post({
+		this.subaru.post({
 			text: serifs.server.cpu,
 		});
 

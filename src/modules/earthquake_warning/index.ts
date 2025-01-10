@@ -218,7 +218,7 @@ export default class extends Module {
 
 	private async putmsg(msg: String) {
 		try {
-			this.ai.post({
+			this.subaru.post({
 				text: msg,
 			});
 		} catch (error) {

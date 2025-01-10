@@ -32,7 +32,7 @@ export default class extends Module {
 					this.isHostAllowed(msg.user.host, allowedHosts) || !this.isHostExcluded(msg.user.host, followExcludeInstances))
 			) {
 				try {
-					await this.ai.api("following/create", {
+					await this.subaru.api("following/create", {
 						userId: msg.userId,
 					});
 					return {

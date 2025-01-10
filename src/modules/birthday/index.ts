@@ -26,15 +26,15 @@ export default class extends Module {
 		const now = new Date();
 		const m = now.getMonth();
 		const d = now.getDate();
-		// Misskeyの誕生日は 2018-06-16 のような形式
+		// MissingKeyの誕生日は 2018-06-16 のような形式
 		const today = `${zeroPadding(m + 1, 2)}-${zeroPadding(d, 2)}`;
 
-		const birthFriends = this.ai.friends.find({
+		const birthFriends = this.subaru.friends.find({
 			"user.birthday": { $regex: new RegExp("-" + today + "$") },
 		} as any);
 
 		birthFriends.forEach((f) => {
-			const friend = new Friend(this.ai, { doc: f });
+			const friend = new Friend(this.subaru, { doc: f });
 
 			// 親愛度が3以上必要
 			if (friend.love < 3) return;
@@ -48,7 +48,7 @@ export default class extends Module {
 
 			const text = serifs.birthday.happyBirthday(friend.name);
 
-			this.ai.sendMessage(friend.userId, {
+			this.subaru.sendMessage(friend.userId, {
 				text: text,
 			});
 		});
