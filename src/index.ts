@@ -1,4 +1,4 @@
-// AiOS bootstrapper
+// DENCO(H) bootstrapper
 
 import process from "node:process";
 import chalk from "chalk";
@@ -81,7 +81,7 @@ promiseRetry(
 		const acct = `@${account.username}`;
 		log(chalk.green(`Account fetched successfully: ${chalk.underline(acct)}`));
 
-		log("Starting AiOS...");
+		log("Starting DENCO(H)...");
 
 		// すばる起動
 		// @ts-ignore

@@ -116,7 +116,7 @@ export default class すばる {
 
 	@bindThis
 	public log(msg: string) {
-		log(`[${chalk.magenta("AiOS")}]: ${msg}`);
+		log(`[${chalk.magenta("DENCO(H)")}]: ${msg}`);
 	}
 
 	@bindThis
