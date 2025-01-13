@@ -322,30 +322,30 @@ export default {
 	 * 数取りゲーム
 	 */
 	kazutori: {
-		alreadyStarted: "今ちょうどやってますよ～",
+		alreadyStarted: "ちょうど開催してるんだ。よかったら参加してね。",
 
-		matakondo: "また今度やりましょう！",
+		matakondo: "また次の機会だね。",
 
 		intro: (minutes) =>
-			`みなさん、数取りゲームしましょう！\n0~100の中で最も大きい数字を取った人が勝ちです。他の人と被ったらだめですよ～\n制限時間は${minutes}分です。数字はこの投稿にリプライで送ってくださいね！`,
+			`みんな、数取りゲームをしよう。\n0~100の中でいちばん、大きい数字で被らなかった人が一番星。\n今から${minutes}分間の間に、この投稿に返信で送ってね。\nでは、始めるよ。`,
 
-		finish: "ゲームの結果発表です！",
+		finish: "10分経ったから、数取りゲームの結果を発表するよ。",
 
 		finishWithWinner: (user, name) =>
 			name
-				? `今回は${user}さん(${name})の勝ちです！またやりましょう♪`
-				: `今回は${user}さんの勝ちです！またやりましょう♪`,
+				? `今回は${user}さん(${name})が一番星だ、おめでとう。次回も楽しみだね。`
+				: `今回は${user}さんが一番星だ、おめでとう。次回も楽しみだね。`,
 
-		finishWithNoWinner: "今回は勝者はいませんでした... またやりましょう♪",
+		finishWithNoWinner: "今回はみんなが美しい星々だ。次回も楽しみだね。",
 
-		onagare: "参加者が集まらなかったのでお流れになりました...",
+		onagare: "今回はどうやらあいにくの空模様だったみたいだ。またタイミングを改めてやろうね。",
 	},
 
 	/**
 	 * 絵文字生成
 	 */
 	emoji: {
-		suggest: (emoji) => `こんなのはどうですか？→${emoji}`,
+		suggest: (emoji) => `こういう感じはどうかな？→ ${emoji}`,
 	},
 
 	/**
@@ -354,52 +354,52 @@ export default {
 	fortune: {
 		cw: (name) =>
 			name
-				? `私が今日の${name}の運勢を占いました...`
-				: "私が今日のあなたの運勢を占いました...",
+				? `星占いだね。今日の${name}の運勢は...`
+				: "星占いだね。今日のあなたの運勢は...",
 	},
 
 	/**
 	 * タイマー
 	 */
 	timer: {
-		set: "わかりました！",
+		set: "OK。まかせて。",
 
-		invalid: "うーん...？",
+		invalid: "どのくらいの時間がいいんだろう。",
 
-		tooLong: "長すぎます…",
+		tooLong: "ちょっと長すぎるかもしれないね。",
 
 		notify: (time, name) =>
-			name ? `${name}、${time}経ちましたよ！` : `${time}経ちましたよ！`,
+			name ? `${name}、${time}経ったよ。` : `${time}経ったよ。`,
 	},
 
 	/**
 	 * リマインダー
 	 */
 	reminder: {
-		invalid: "うーん...？",
+		invalid: "ちょっと、ぼくには難しいみたいだ。",
 
-		doneFromInvalidUser: "イタズラはめっですよ！",
+		doneFromInvalidUser: "もしかしたら、まだ十分じゃないかも。",
 
-		reminds: "やること一覧です！",
+		reminds: "やることを、一通りまとめてみたんだ。",
 
 		notify: (name) =>
-			name ? `${name}、これやりましたか？` : `これやりましたか？`,
+			name ? `${name}は、これ終わったかな？` : `これ終わったかな？`,
 
 		notifyWithThing: (thing, name) =>
 			name
-				? `${name}、「${thing}」やりましたか？`
-				: `「${thing}」やりましたか？`,
+				? `${name}は、「${thing}」終わったかな？`
+				: `「${thing}」終わったかな？`,
 
 		done: (name) =>
 			name
 				? [
-						`よく出来ました、${name}♪`,
-						`${name}、さすがですっ！`,
-						`${name}、えらすぎます...！`,
+						`さすが${name}、僕らの星だね。`,
+						`${name}はやっぱりすごいね。`,
+						`${name}も終わったんだね。よかった。`,
 					]
-				: [`よく出来ました♪`, `さすがですっ！`, `えらすぎます...！`],
+				: [`さすが、僕らの星だね。`, `やっぱりすごいね。`, `終わったんだね。よかった。`],
 
-		cancel: `わかりました。`,
+		cancel: `難しかったのかな。次こそは出来るといいね。`,
 	},
 
 	/**
@@ -408,52 +408,54 @@ export default {
 	valentine: {
 		chocolateForYou: (name) =>
 			name
-				? `${name}、その... チョコレート作ったのでよかったらどうぞ！🍫`
-				: "チョコレート作ったのでよかったらどうぞ！🍫",
+				? `${name}のためにチョコレートを作ってみたんだ。受け取ってもらえるかな？🍫`
+				: "チョコレートを作ってみたんだ。受け取ってもらえるかな？🍫",
 	},
 
 	server: {
-		cpu: "サーバーの負荷が高そうです。大丈夫でしょうか...？",
+		cpu: "サーバーが忙しそうだけど、大丈夫かな？",
 	},
 
 	maze: {
-		post: "今日の迷路です！ #AiMaze",
-		foryou: "描きました！",
+		post: "今日も、星々をつないでみたよ。 #Maze",
+		foryou: "こんな感じでどうかな？",
 	},
 
 	chart: {
-		post: "インスタンスの投稿数です！",
-		foryou: "描きました！",
+		post: "インスタンスの投稿数をまとめてみたよ。",
+		foryou: "こんな感じでどうかな？",
 	},
 
 	checkCustomEmojis: {
 		post: (server_name, num) =>
-			`${server_name}に${num}件の絵文字が追加されました！`,
+			`${server_name}に${num}件の絵文字が追加されたみたいだよ。`,
 		emojiPost: (emoji) => `:${emoji}:\n(\`${emoji}\`) #AddCustomEmojis`,
 		postOnce: (server_name, num, text) =>
-			`${server_name}に${num}件の絵文字が追加されました！\n${text} #AddCustomEmojis`,
+			`${server_name}に${num}件の絵文字が追加されたみたいだよ。\n${text} #AddCustomEmojis`,
 		emojiOnce: (emoji) => `:${emoji}:(\`${emoji}\`)`,
 	},
 
 	denchat: {
-		nothing: `あぅ... APIキーが登録されてないみたいです`,
-		error: `うぇ...エラーが発生しちゃったみたいです。`,
+		nothing: `APIキーが登録されてないみたいだよ。`,
+		error: `エラーが発生しているみたいだよ。`,
 		post: (text) => `${text} #denchat`,
 	},
 
 	sleepReport: {
-		report: (hours) => `んぅ、${hours}時間くらい寝ちゃってたみたいです`,
-		reportUtatane: "ん... うたた寝しちゃってました",
+		report: (hours) => `ぼく、${hours}時間くらい寝ちゃってたかも。`,
+		reportUtatane: "あれ、少し寝ちゃってたみたい。",
 	},
 
 	noting: {
 		notes: [
-			"今日の空はどんな表情を見せてくれるかな。",
-			"",
+			"人が好きだよ。でんこも好き。みんな個性があるんだ。夜空にきらめく星々のように、輝いている。",
+			"きみのことをもっと教えてよ。ぼく、きみが話している声が好きだ。",
+			"きみが休みたくなったなら、いつでも眠れるようにしてあげる。やわらかい寝床を準備するのは得意なんだ。",
+			"今このひととき、ぼくはきみの衛星でいたい。許してくれる？",
 		],
-		want: (item) => `${item}、欲しいなぁ...`,
-		see: (item) => `お散歩していたら、道に${item}が落ちているのを見たんです！`,
-		expire: (item) => `気づいたら、${item}の賞味期限が切れてました…`,
+		want: (item) => `${item}が欲しいんだ。`,
+		see: (item) => `外で休んでいたら、${item}を見つけたよ。`,
+		expire: (item) => `${item}、無くなっちゃったみたい。`,
 	},
 };
 
