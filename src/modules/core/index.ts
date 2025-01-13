@@ -66,7 +66,13 @@ export default class extends Module {
 		if (!msg.text.includes("って呼んで")) return false;
 		if (msg.text.startsWith("って呼んで")) return false;
 
-		const name = msg.text.match(/^(.+?)って呼んで/g)![1];
+    const matchResult = msg.text.match(/^(.+?)って呼んで/g);
+    if (!matchResult) {
+			msg.reply(serifs.core.invalidName);
+			return true;
+		} // matchがnullの場合、無効な名前
+
+    const name = matchResult[0].slice(0, -5); // "って呼んで"を取り除く
 
 		if (name.length > 10) {
 			msg.reply(serifs.core.tooLong);

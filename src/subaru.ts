@@ -218,7 +218,7 @@ export default class すばる {
 
 		setInterval(this.logWaking, 10000);
 
-		this.log(chalk.green.bold("Ai am now running!"));
+		this.log(chalk.green.bold("DENCO(H) now running!"));
 	}
 
 	/**
