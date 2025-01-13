@@ -1,5 +1,5 @@
 <h1><p align="center"><img src="./subaru.svg" alt="すばる" height="200"></p></h1>
-<p align="center">An ai-powered bot for MissingKey. <a href="./torisetu.md">About Ai</a></p>
+<p align="center">An ai-powered bot for MissingKey. <a href="https://ek1mem0.wiki.fc2.com/wiki/%E8%AB%B8%E6%98%9F%E3%81%99%E3%81%B0%E3%82%8B">About Subaru</a></p>
 
 ## これなに
 MissingKey用の日本語Botです。
