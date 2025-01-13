@@ -63,16 +63,10 @@ export default class extends Module {
 	@bindThis
 	private setName(msg: Message): boolean {
 		if (!msg.text) return false;
-		if (!msg.text.includes("って呼んで")) return false;
-		if (msg.text.startsWith("って呼んで")) return false;
+		if (!msg.text.includes('って呼んで')) return false;
+		if (msg.text.startsWith('って呼んで')) return false;
 
-    const matchResult = msg.text.match(/^(.+?)って呼んで/g);
-    if (!matchResult) {
-			msg.reply(serifs.core.invalidName);
-			return true;
-		} // matchがnullの場合、無効な名前
-
-    const name = matchResult[0].slice(0, -5); // "って呼んで"を取り除く
+		const name = msg.text.match(/^(.+?)って呼んで/g)![1];
 
 		if (name.length > 10) {
 			msg.reply(serifs.core.tooLong);
