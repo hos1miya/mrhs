@@ -48,7 +48,7 @@ export default class extends Module {
 					console.error("Failed to follow user:", error);
 				}
 			} else if (!msg.user.isFollowing) {
-				await msg.reply("どなたさまですか？");
+				await msg.reply("きみは誰？");
 				return {
 					reaction: msg.friend.love >= 0 ? "hmm" : null,
 				};
