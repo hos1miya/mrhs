@@ -282,7 +282,7 @@ export default class extends Module {
 			});
 			// this.log('Relation data:' + JSON.stringify(relation));
 
-			if (relation[0]?.isFollowing !== true) {
+			if (relation.isFollowing !== true) {
 				this.log('The user is not following me:' + msg.userId);
 				msg.reply('denchatへのアクセスが拒否されました。(権限がありません)');
 				return false;
