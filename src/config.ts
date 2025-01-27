@@ -13,10 +13,11 @@ type Config = {
 	checkEmojisEnabled?: boolean;
 	checkEmojisAtOnce?: boolean;
 	geminiApiKey?: string;
+	pLaMoApiKey?: string;
 	prompt?: string;
-	replayPrompt?: string;
-	disableRandomReplies?: boolean;
-	denchatRandomProbability?: number;
+	denchatRandomTalkEnabled?: boolean;
+	denchatRandomTalkProbability?: string;
+	denchatRandomTalkIntervalMinutes?: string;
 	mecab?: string;
 	mecabDic?: string;
 	memoryDir?: string;

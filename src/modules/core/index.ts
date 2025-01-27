@@ -66,9 +66,10 @@ export default class extends Module {
 		if (!msg.text.includes('って呼んで')) return false;
 		if (msg.text.startsWith('って呼んで')) return false;
 
-		const name = msg.text.match(/^(.+?)って呼んで/g)![1];
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const name = msg.text.replace(/^@[a-zA-Z0-9_]+\s*/, '').match(/^(.+?)って呼んで/)![1];
 
-		if (name.length > 10) {
+		if (name.trim.length > 10) {
 			msg.reply(serifs.core.tooLong);
 			return true;
 		}
