@@ -276,6 +276,17 @@ export default class extends Module {
 			return false;
 		} else {
 			this.log('DenChat requested');
+			
+			const relation : any = await this.subaru?.api('users/relation', {
+				userId: msg.userId,
+			});
+			// this.log('Relation data:' + JSON.stringify(relation));
+
+			if (relation[0]?.isFollowing !== true) {
+				this.log('The user is not following me:' + msg.userId);
+				msg.reply('denchatへのアクセスが拒否されました。(権限がありません)');
+				return false;
+			}
 		}
 
 		// msg.idをもとにnotes/conversationを呼び出し、会話中のidかチェック
