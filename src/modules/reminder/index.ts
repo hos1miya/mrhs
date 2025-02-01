@@ -83,9 +83,16 @@ export default class extends Module {
 		// 内容部分を抽出
 		const thing = text.slice(separatorIndex + 1, secondSeparatorIndex).trim();
 		// 日付部分を抽出 指定がなければ30日
-		const day = text.slice(secondSeparatorIndex + 1).trim();
-		const daysQuery = (day || "").match(/([0-9]+)時間/);
+		const time = text.slice(secondSeparatorIndex + 1).trim();
+		const minutesQuery = (time || "").match(/([0-9]+)分/);
+		const hoursQuery = (time || "").match(/([0-9]+)時間/);
+		const daysQuery = (time || "").match(/([0-9]+)日/);
+		const minutes = minutesQuery ? parseInt(minutesQuery[1], 10) : 0;
+		const hours = hoursQuery ? parseInt(hoursQuery[1], 10) : 0;
 		const days = daysQuery ? parseInt(daysQuery[1], 10) : 30;
+		const times = minutes + hours + days == 0 
+			? 1000 * 60 * 60 * 24 * 30 // 0分が指定された場合デフォルトの30日にする
+			: 1000 * 60 * minutes + 1000 * 60 * 60 * hours + 1000 * 60 * 60 * 24 * days;
 
 		// 今日の日付の23:59:59を設定
 		const now = new Date();
@@ -93,7 +100,8 @@ export default class extends Module {
 
 		if (
 			(thing === "" && msg.quoteId == null) ||
-			msg.visibility === "followers"
+			msg.visibility === "followers" ||
+			times > 5184000000
 		) {
 			msg.reply(serifs.reminder.invalid);
 			return {
@@ -109,7 +117,7 @@ export default class extends Module {
 			quoteId: msg.quoteId,
 			times: 0,
 			createdAt: Date.now(),
-			expiredAt: endOfToday.getTime() + days * 24 * 60 * 60 * 1000,
+			expiredAt: minutes + hours === 0 ? endOfToday.getTime() + times : times,	// 分と時間が0なら終了日の23:59:59までにする、分と時間の指定があれば指定時間まで
 		});
 
 		// メンションをsubscribe
