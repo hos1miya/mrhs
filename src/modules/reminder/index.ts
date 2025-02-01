@@ -11,13 +11,14 @@ const NOTIFY_INTERVAL = 1000 * 60 * 60 * 12;
 export default class extends Module {
 	public readonly name = "reminder";
 
-	private reminds: loki.Collection<{
+	private reminds!: loki.Collection<{
 		userId: string;
 		id: string;
 		thing: string | null;
 		quoteId: string | null;
 		times: number; // 催促した回数(使うのか？)
 		createdAt: number;
+		expiredAt: number;
 	}>;
 
 	@bindThis
@@ -77,9 +78,18 @@ export default class extends Module {
 			text = "";
 		}
 
-		const separatorIndex =
-			text.indexOf(" ") > -1 ? text.indexOf(" ") : text.indexOf("\n");
-		const thing = text.substr(separatorIndex + 1).trim();
+		const separatorIndex = text.indexOf(" "); // 最初のスペースの位置を取得（ユーザーIDと日付を区切るため）
+		const secondSeparatorIndex = text.indexOf(" ", separatorIndex + 1); // 次のスペース（ユーザーIDと日付の区切り）
+		// 内容部分を抽出
+		const thing = text.slice(separatorIndex + 1, secondSeparatorIndex).trim();
+		// 日付部分を抽出 指定がなければ30日
+		const day = text.slice(secondSeparatorIndex + 1).trim();
+		const daysQuery = (day || "").match(/([0-9]+)時間/);
+		const days = daysQuery ? parseInt(daysQuery[1], 10) : 30;
+
+		// 今日の日付の23:59:59を設定
+		const now = new Date();
+		const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
 		if (
 			(thing === "" && msg.quoteId == null) ||
@@ -99,6 +109,7 @@ export default class extends Module {
 			quoteId: msg.quoteId,
 			times: 0,
 			createdAt: Date.now(),
+			expiredAt: endOfToday.getTime() + days * 24 * 60 * 60 * 1000,
 		});
 
 		// メンションをsubscribe
@@ -170,6 +181,23 @@ export default class extends Module {
 
 		const friend = this.subaru.lookupFriend(remind.userId);
 		if (friend == null) return; // 処理の流れ上、実際にnullになることは無さそうだけど一応
+
+		// 期限切れならお知らせしてリマインダー解除
+		if ( Date.now() > remind.expiredAt ) {
+			try {
+				await this.subaru.post({
+					renoteId:
+						remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+					text: acct(friend.doc.user) + " " + serifs.reminder.expired,
+				});
+			} finally {
+				this.unsubscribeReply(
+					remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+				);
+				this.reminds.remove(remind);
+				return;
+			}
+		}
 
 		let reply;
 		try {
