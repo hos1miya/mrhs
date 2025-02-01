@@ -133,7 +133,7 @@ export default class extends Module {
 		}
 
 		// タイマーセット
-		this.setTimeoutWithPersistence(NOTIFY_INTERVAL, {
+		this.setTimeoutWithPersistence(NOTIFY_INTERVAL > times ? times + 100 : NOTIFY_INTERVAL, {
 			id: remind!.id,
 		});
 
