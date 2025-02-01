@@ -45,6 +45,23 @@ export default class extends Module {
 		)
 			return false;
 
+		// 全てのリマインドを削除
+		if (
+			text.startsWith("reminds purge") ||
+			text.startsWith("todos purge")
+		) {
+			const reminds = this.reminds.find({
+				userId: msg.userId,
+			});
+			reminds.forEach((remind) => {
+				this.unsubscribeReply(
+				  remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+				);
+				this.reminds.remove(remind);
+			});
+			return true;
+		}
+
 		if (
 			text.startsWith("reminds") ||
 			text.startsWith("todos") ||
@@ -69,23 +86,6 @@ export default class extends Module {
 						)
 						.join("\n"),
 			);
-			return true;
-		}
-
-		// 全てのリマインドを削除
-		if (
-			text.startsWith("reminds purge") ||
-			text.startsWith("todos purge")
-		) {
-			const reminds = this.reminds.find({
-				userId: msg.userId,
-			});
-			reminds.forEach((remind) => {
-				this.unsubscribeReply(
-				  remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
-				);
-				this.reminds.remove(remind);
-			});
 			return true;
 		}
 
