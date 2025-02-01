@@ -89,7 +89,7 @@ export default class extends Module {
 		const daysQuery = (time || "").match(/([0-9]+)日/);
 		const minutes = minutesQuery ? parseInt(minutesQuery[1], 10) : 0;
 		const hours = hoursQuery ? parseInt(hoursQuery[1], 10) : 0;
-		const days = daysQuery ? parseInt(daysQuery[1], 10) : 30;
+		const days = daysQuery ? parseInt(daysQuery[1], 10) : 0;
 		const times = minutes + hours + days == 0 
 			? 1000 * 60 * 60 * 24 * 30 // 0分が指定された場合デフォルトの30日にする
 			: 1000 * 60 * minutes + 1000 * 60 * 60 * hours + 1000 * 60 * 60 * 24 * days;
