@@ -16,6 +16,15 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
+		let text = msg.extractedText.toLowerCase();
+		if (
+			!text.startsWith("timer") &&
+			!text.startsWith("タイマー") &&
+			!text.startsWith("計測") &&
+			!text.startsWith("ストップウォッチ")
+		)
+			return false;
+
 		const secondsQuery = (msg.text || "").match(/([0-9]+)秒/);
 		const minutesQuery = (msg.text || "").match(/([0-9]+)分/);
 		const hoursQuery = (msg.text || "").match(/([0-9]+)時間/);
