@@ -89,6 +89,7 @@ promiseRetry(
 		// @ts-ignore
 		new すばる(account, [
 			new CoreModule(),
+			new DenChatModule(),
 			new EmojiModule(),
 			new EmojiReactModule(),
 			new FortuneModule(),
@@ -113,7 +114,6 @@ promiseRetry(
 			new ReminderModule(),
 			new CheckCustomEmojisModule(),
 			//new EarthQuakeWarningModule(),
-			new DenChatModule(),
 		]);
 	})
 	.catch((e) => {
