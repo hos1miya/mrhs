@@ -95,12 +95,19 @@ export default class extends Module {
 			text = "";
 		}
 
-		const separatorIndex = text.indexOf(" "); // 最初のスペースの位置を取得（ユーザーIDと日付を区切るため）
-		const secondSeparatorIndex = text.indexOf(" ", separatorIndex + 1); // 次のスペース（ユーザーIDと日付の区切り）
-		// 内容部分を抽出
-		const thing = text.slice(separatorIndex + 1, secondSeparatorIndex).trim();
-		// 日付部分を抽出 指定がなければ30日
-		const time = text.slice(secondSeparatorIndex + 1).trim();
+
+		const words = text.split(" "); // スペースで分割
+		let thing, time;
+		
+		if (words.length > 1 && words[words.length - 1].match(/^\d+[日月年]$/)) {
+			// 最後の単語が「○日」「○月」「○年」なら time
+			time = words.pop(); // 配列の最後の要素を time に
+		} else {
+			time = ""; // time がない場合は空
+		}
+		
+		thing = words.join(" ").trim(); // 残りを thing に
+
 		const minutesQuery = (time || "").match(/([0-9]+)分/);
 		const hoursQuery = (time || "").match(/([0-9]+)時間/);
 		const daysQuery = (time || "").match(/([0-9]+)日/);
