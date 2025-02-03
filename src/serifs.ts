@@ -163,7 +163,7 @@ export default {
 	},
 
 	dice: {
-		done: (res) => `サイコロの結果は... ${res} だ。`,
+		done: (res) => `${res} だよ。`,
 	},
 
 	birthday: {
