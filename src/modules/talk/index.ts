@@ -37,7 +37,7 @@ export default class extends Module {
 			this.access(msg) ||
 			this.connect(msg) ||
 			this.reboot(msg) ||
-			this.sexualharassment(msg) ||
+			this.sexualharassment(msg)
 			//this.breathinginai(msg)
 		);
 	}
