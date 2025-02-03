@@ -60,7 +60,7 @@ export default class extends Module {
 				this.reminds.remove(remind);
 			});
 			return {
-				reaction: "🚮👌",
+				reaction: "🚮",
 				immediate: true,
 			};
 		}
@@ -97,7 +97,6 @@ export default class extends Module {
 		} else {
 			text = "";
 		}
-
 
 		const words = text.split(" "); // スペースで分割
 		let thing, time;
@@ -144,7 +143,7 @@ export default class extends Module {
 			quoteId: msg.quoteId,
 			times: 0,
 			createdAt: Date.now(),
-			expiredAt: minutes + hours === 0 ? endOfToday.getTime() + times : times,	// 分と時間が0なら終了日の23:59:59までにする、分と時間の指定があれば指定時間まで
+			expiredAt: minutes + hours === 0 ? endOfToday.getTime() + times : now.getTime() + times,	// 分と時間が0なら終了日の23:59:59までにする、分と時間の指定があれば指定時間まで
 		});
 
 		// メンションをsubscribe
