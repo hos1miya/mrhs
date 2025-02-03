@@ -38,12 +38,9 @@ export default class extends Module {
 
 		const customEmojis = note.text.match(/:([^\n:]+?):/g);
 		if (customEmojis) {
-			// カスタム絵文字が複数種類ある場合はキャンセル
-			if (!customEmojis.every((val, i, arr) => val === arr[0])) return;
-
 			this.log(`Custom emoji detected - ${customEmojis[0]}`);
 
-			return react(customEmojis[0]);
+			return react("🌟");
 		}
 
 		const emojis = parse(note.text).map((x) => x.text);
@@ -82,8 +79,6 @@ export default class extends Module {
 		if (includes(note.text, ["ねこ", "cat"])) return react("😺");
 		if (includes(note.text, ["いぬ", "dog"])) return react("🐶");
 
-		if (includes(note.text, ["すばる"])) return react("🙌");
-
-		return react("🌟");
+		if (includes(note.text, ["すばる"])) return react("🌌");
 	}
 }
