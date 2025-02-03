@@ -143,9 +143,13 @@ export default class Friend {
 		// 最低 -30
 		if (this.doc.love < -30) this.doc.love = -30;
 
-		// 親愛度マイナスなら名前を忘れる
+		// 親愛度マイナスなら名前を忘れてブロック
 		if (this.doc.love < 0) {
 			this.doc.name = null;
+			this.subaru.api("blocking/create", {
+				userId: this.doc.userId,
+			});
+			this.subaru.log(`Blocked ${this.doc.name}`);
 		}
 
 		this.save();
