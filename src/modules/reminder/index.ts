@@ -95,12 +95,20 @@ export default class extends Module {
 			text = "";
 		}
 
-		const separatorIndex = text.indexOf(" "); // 最初のスペースの位置を取得（ユーザーIDと日付を区切るため）
-		const secondSeparatorIndex = text.indexOf(" ", separatorIndex + 1); // 次のスペース（ユーザーIDと日付の区切り）
-		// 内容部分を抽出
-		const thing = text.slice(separatorIndex + 1, secondSeparatorIndex).trim();
-		// 日付部分を抽出 指定がなければ30日
-		const time = text.slice(secondSeparatorIndex + 1).trim();
+		const separatorIndex = text.indexOf(" ");
+		const secondSeparatorIndex = text.indexOf(" ", separatorIndex + 1);
+		let thing, time;
+		
+		if (secondSeparatorIndex === -1) {
+			// 2つ目のスペースがない場合は、thing に全体を入れ、time はデフォルト値
+			thing = text.slice(separatorIndex + 1).trim();
+			time = "30日"; // デフォルト値
+		} else {
+			// 通常の処理
+			thing = text.slice(separatorIndex + 1, secondSeparatorIndex).trim();
+			time = text.slice(secondSeparatorIndex + 1).trim();
+		}
+
 		const minutesQuery = (time || "").match(/([0-9]+)分/);
 		const hoursQuery = (time || "").match(/([0-9]+)時間/);
 		const daysQuery = (time || "").match(/([0-9]+)日/);
