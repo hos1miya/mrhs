@@ -51,7 +51,7 @@ function log(msg: string): void {
 	_log(`[Boot]: ${msg}`);
 }
 
-log(chalk.bold(`Ai v${pkg._v}`));
+log(chalk.bold(`Subaru v${pkg._v}`));
 
 process.on("uncaughtException", (err) => {
 	try {
