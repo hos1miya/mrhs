@@ -33,7 +33,7 @@ export default class extends Module {
 			results.push(Math.floor(Math.random() * dice) + 1);
 		}
 
-		const message = msg.text.replace(/\d[dD]\d/g, results.join(" "))
+		const message = msg.text.replace(/\d+[dD]\d+/g, results.join(" "))
 		msg.reply(serifs.dice.done(message));
 
 		return true;
