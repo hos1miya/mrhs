@@ -59,7 +59,10 @@ export default class extends Module {
 				);
 				this.reminds.remove(remind);
 			});
-			return true;
+			return {
+				reaction: "🚮👌",
+				immediate: true,
+			};
 		}
 
 		if (
@@ -99,14 +102,14 @@ export default class extends Module {
 		const words = text.split(" "); // スペースで分割
 		let thing, time;
 		
-		if (words.length > 1 && words[words.length - 1].match(/^\d+[日月年]$/)) {
-			// 最後の単語が「○日」「○月」「○年」なら time
+		if (words.length > 1 && words[words.length - 1].match(/^\d+(分|時間|日)$/)) {
+			// 最後の単語が「○分」「○時間」「○日」なら time
 			time = words.pop(); // 配列の最後の要素を time に
 		} else {
 			time = ""; // time がない場合は空
 		}
 		
-		thing = words.join(" ").trim(); // 残りを thing に
+		thing = words.join(" "); // 残りを thing に
 
 		const minutesQuery = (time || "").match(/([0-9]+)分/);
 		const hoursQuery = (time || "").match(/([0-9]+)時間/);
