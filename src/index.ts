@@ -16,7 +16,7 @@ const pkg = require("../package.json");
 import CoreModule from "./modules/core/index.js";
 import TalkModule from "./modules/talk/index.js";
 import BirthdayModule from "./modules/birthday/index.js";
-import ReversiModule from "./modules/reversi/index.js";
+//import ReversiModule from "./modules/reversi/index.js";
 import PingModule from "./modules/ping/index.js";
 import EmojiModule from "./modules/emoji/index.js";
 import EmojiReactModule from "./modules/emoji-react/index.js";
@@ -37,7 +37,7 @@ import NotingModule from "./modules/noting/index.js";
 import PollModule from './modules/poll/index.js';
 import ReminderModule from "./modules/reminder/index.js";
 import CheckCustomEmojisModule from "./modules/check-custom-emojis/index.js";
-import EarthQuakeWarningModule from "./modules/earthquake_warning/index.js";
+//import EarthQuakeWarningModule from "./modules/earthquake_warning/index.js";
 import DenChatModule from "./modules/denchat/index.js";
 
 console.log("   __    ____  _____  ___ ");
@@ -92,7 +92,7 @@ promiseRetry(
 			new FortuneModule(),
 			new GuessingGameModule(),
 			new KazutoriModule(),
-			new ReversiModule(),
+			//new ReversiModule(),
 			new TimerModule(),
 			new DiceModule(),
 			new TalkModule(),
@@ -110,7 +110,7 @@ promiseRetry(
 			new PollModule(),
 			new ReminderModule(),
 			new CheckCustomEmojisModule(),
-			new EarthQuakeWarningModule(),
+			//new EarthQuakeWarningModule(),
 			new DenChatModule(),
 		]);
 	})
