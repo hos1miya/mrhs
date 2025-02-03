@@ -89,6 +89,8 @@ export default class Message {
 			await sleep(2000);
 		}
 
+		const visibleIds = (opts?.visibility && opts.visibility == "specified") ? [ this.friend.userId ] : undefined;
+
 		return await this.subaru.post({
 			replyId: this.note.id,
 			text: text,
@@ -96,6 +98,7 @@ export default class Message {
 			cw: opts?.cw,
 			renoteId: opts?.renote,
 			visibility: opts?.visibility ? opts?.visibility : "home",
+			visibleUserIds: visibleIds ? visibleIds : undefined,
 		});
 	}
 
