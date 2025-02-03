@@ -86,7 +86,7 @@ export default class extends Module {
 					reminds
 						.map(
 							(remind) =>
-								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} (残り${Math.floor((remind.expiredAt - Date.now()) / (1000 * 60 * 60 * 24))}日 ${Math.floor(((remind.expiredAt - Date.now()) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))}時間 ${Math.floor(((remind.expiredAt - Date.now()) % (1000 * 60 * 60)) / (1000 * 60))}分)`,
+								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} \$[unixtime ${remind.expiredAt}]`,
 						)
 						.join("\n"),
 				{ visibility : msg.visibility },
