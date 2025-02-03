@@ -2,20 +2,20 @@
 
 export default {
 	core: {
-		setNameOk: (name) => `わかりました。これからは${name}とお呼びしますね！`,
+		setNameOk: (name) => `OK。これからは${name}って呼ばせてもらうね。`,
 
-		san: "さん付けした方がいいですか？",
+		san: "さん付けした方がいいかな？",
 
-		yesOrNo: "「はい」か「いいえ」しかわからないんです...",
+		yesOrNo: "「はい」か「いいえ」で教えてね。",
 
-		hello: (name) => (name ? `こんにちは、${name}♪` : `こんにちは♪`),
+		hello: (name) => (name ? `やあ、${name}。` : `やあ。`),
 
-		helloNight: (name) => (name ? `こんばんは、${name}♪` : `こんばんは♪`),
+		helloNight: (name) => (name ? `${name}、こんばんはだね。` : `こんばんはだね。`),
 
 		goodMorning: (tension, name) =>
 			name
-				? `おはようございます、${name}！${tension}`
-				: `おはようございます！${tension}`,
+				? `おはよう、${name}。`
+				: `おはよう。`,
 
 		/*
 		goodMorning: {
@@ -26,11 +26,11 @@ export default {
 */
 
 		goodNight: (name) =>
-			name ? `おやすみなさい、${name}！` : "おやすみなさい！",
+			name ? `おやすみ、${name}。` : "おやすみ。",
 
 		omedeto: (name) =>
-			name ? `ありがとうございます、${name}♪` : "ありがとうございます♪",
-
+			name ? `${name}、ありがとう。` : "ありがとう。",
+/*
 		erait: {
 			general: (name) =>
 				name
@@ -53,34 +53,17 @@ export default {
 						]
 					: [`${thing}でえらいです！`, `${thing}でえらいですよ～♪`],
 		},
+*/
+		okaeri: (name) =>
+				name ? `おかえり、${name}。` : "おかえり。",
 
-		okaeri: {
-			love: (name) =>
-				name
-					? [`おかえりなさい、${name}♪`, `おかえりなさいませっ、${name}っ。`]
-					: ["おかえりなさい♪", "おかえりなさいませっ、ご主人様っ。"],
+		itterassyai: (name) =>
+				name ? `いってらっしゃい、${name}。` : "いってらっしゃい。",
 
-			love2: (name) =>
-				name
-					? `おかえりなさいませ♡♡♡${name}っっ♡♡♡♡♡`
-					: "おかえりなさいませ♡♡♡ご主人様っっ♡♡♡♡♡",
+		tooLong: "長すぎるかも。",
 
-			normal: (name) =>
-				name ? `おかえりなさい、${name}！` : "おかえりなさい！",
-		},
-
-		itterassyai: {
-			love: (name) =>
-				name ? `いってらっしゃい、${name}♪` : "いってらっしゃい♪",
-
-			normal: (name) =>
-				name ? `いってらっしゃい、${name}！` : "いってらっしゃい！",
-		},
-
-		tooLong: "長すぎる気がします...",
-
-		invalidName: "発音が難しい気がします",
-		// TODO: 撫でるなどは合わないので機能ごと無効にする
+		invalidName: "発音が難しいかも。",
+/*
 		nadenade: {
 			normal: "いきなりで、少しびっくりしちゃった。",
 
@@ -101,31 +84,19 @@ export default {
 
 			hate4: null,
 		},
+*/
+		kawaii: "ありがとう。",
 
-		kawaii: {
-			normal: ["ありがとう。", "ぼく、かわいいのかな。"],
-
-			love: ["ありがとう。嬉しいよ。", "そう言われると少し、恥ずかしいかもね。"],
-
-			hate: "そんなことないと思うよ。",
-		},
-
-		suki: {
-			normal: "ありがとう。そう言ってもらえて嬉しいな。",
-
-			love: (name) => `ぼくも${name}のことが好きで、離れがたいな。`,
-
-			hate: null,
-		},
+		suki: "ありがとう。そう言ってもらえて嬉しいな。",
 
 		hug: {
-			normal: "ぎゅ。人間ってあったかくて、生きてるって感じるよ。",
+			normal: "ぎゅ。人間ってあったかくて、生きてるんだなって感じるよ。",
 
 			love: "ぎゅー。ちょっと、照れちゃうね。",
 
 			hate: "それは難しいかな。",
 		},
-
+/*
 		humu: {
 			love: "ぼく、きみにそんなこと出来ないよ。",
 
@@ -141,12 +112,12 @@ export default {
 
 			hate: "それは難しいかな。",
 		},
-
+*/
 		itai: (name) =>
 			name
 				? `${name}、大丈夫？一緒に星空を眺めて、深呼吸でもしようか。`
 				: "大丈夫？一緒に星空を眺めて、深呼吸でもしようか。",
-
+/*
 		ote: {
 			normal: "どういうことだい？",
 
@@ -156,9 +127,15 @@ export default {
 		},
 
 		shutdown: "ぼくはまだ、眠くないかな。",
+*/
+		access: "アクセスしたよ。",
+
+		connect: "リンク成功。やったね。",
+
+		reboot: "リンク切れちゃったみたい。",
 
 		sexualharassment: "そういうことは好きじゃないんだ、ぼく。",
-
+/*
 		breathinginsubaru: {
 			normal: "どうしたの？",
 
@@ -166,7 +143,7 @@ export default {
 
 			hate: "……",
 		},
-
+*/
 		transferNeedDm: "わかった。じゃあ、メッセージで話せるかな？",
 
 		transferCode: (code) => `わかった。\n合言葉は「${code}」だよ。`,
@@ -355,7 +332,7 @@ export default {
 		cw: (name) =>
 			name
 				? `星占いだね。今日の${name}の運勢は...`
-				: "星占いだね。今日のあなたの運勢は...",
+				: "星占いだね。今日のきみの運勢は...",
 	},
 
 	/**

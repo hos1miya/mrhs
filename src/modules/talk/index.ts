@@ -21,21 +21,24 @@ export default class extends Module {
 
 		return (
 			this.greet(msg) ||
-			this.erait(msg) ||
+			//this.erait(msg) ||
 			this.omedeto(msg) ||
-			this.nadenade(msg) ||
+			//this.nadenade(msg) ||
 			this.kawaii(msg) ||
 			this.suki(msg) ||
 			this.hug(msg) ||
 			this.humu(msg) ||
 			this.batou(msg) ||
 			this.itai(msg) ||
-			this.ote(msg) ||
-			this.ponkotu(msg) ||
-			this.rmrf(msg) ||
-			this.shutdown(msg) ||
+			//this.ote(msg) ||
+			//this.ponkotu(msg) ||
+			//this.rmrf(msg) ||
+			//this.shutdown(msg) ||
+			this.access(msg) ||
+			this.connect(msg) ||
+			this.reboot(msg) ||
 			this.sexualharassment(msg) ||
-			this.breathinginai(msg)
+			//this.breathinginai(msg)
 		);
 	}
 
@@ -88,32 +91,22 @@ export default class extends Module {
 		}
 
 		if (
-			msg.includes(["行ってくる", "行ってきます", "いってくる", "いってきます"])
+			msg.includes(["行ってくる", "行ってきます", "いってくる", "いってきます", "いてきま"])
 		) {
-			msg.reply(
-				msg.friend.love >= 7
-					? serifs.core.itterassysubaru.love(msg.friend.name)
-					: serifs.core.itterassysubaru.normal(msg.friend.name),
-			);
+			msg.reply(serifs.core.itterassyai(msg.friend.name),);
 			incLove();
 			return true;
 		}
 
-		if (msg.includes(["ただいま"])) {
-			msg.reply(
-				msg.friend.love >= 15
-					? serifs.core.okaeri.love2(msg.friend.name)
-					: msg.friend.love >= 7
-						? getSerif(serifs.core.okaeri.love(msg.friend.name))
-						: serifs.core.okaeri.normal(msg.friend.name),
-			);
+		if (msg.includes(["ただいま", "帰還", "帰宅", "北区"])) {
+			msg.reply(serifs.core.okaeri(msg.friend.name),);
 			incLove();
 			return true;
 		}
 
 		return false;
 	}
-
+/*
 	@bindThis
 	private erait(msg: Message): boolean {
 		const match = msg.extractedText.match(/(.+?)た(から|ので)(褒|ほ)めて/);
@@ -144,7 +137,7 @@ export default class extends Module {
 
 		return true;
 	}
-
+*/
 	@bindThis
 	private omedeto(msg: Message): boolean {
 		if (!msg.includes(["おめでと"])) return false;
@@ -153,7 +146,7 @@ export default class extends Module {
 
 		return true;
 	}
-
+/*
 	@bindThis
 	private nadenade(msg: Message): boolean {
 		if (!msg.includes(["なでなで"])) return false;
@@ -193,20 +186,12 @@ export default class extends Module {
 
 		return true;
 	}
-
+*/
 	@bindThis
 	private kawaii(msg: Message): boolean {
 		if (!msg.includes(["かわいい", "可愛い"])) return false;
 
-		msg.reply(
-			getSerif(
-				msg.friend.love >= 5
-					? serifs.core.kawaii.love
-					: msg.friend.love <= -3
-						? serifs.core.kawaii.hate
-						: serifs.core.kawaii.normal,
-			),
-		);
+		msg.reply(serifs.core.kawaii);
 
 		return true;
 	}
@@ -215,15 +200,7 @@ export default class extends Module {
 	private suki(msg: Message): boolean {
 		if (!msg.or(["好き", "すき"])) return false;
 
-		msg.reply(
-			msg.friend.love >= 5
-				? msg.friend.name
-					? serifs.core.suki.love(msg.friend.name)
-					: serifs.core.suki.normal
-				: msg.friend.love <= -3
-					? serifs.core.suki.hate
-					: serifs.core.suki.normal,
-		);
+		msg.reply(serifs.core.suki);
 
 		return true;
 	}
@@ -263,33 +240,23 @@ export default class extends Module {
 	}
 
 	@bindThis
-	private humu(msg: Message): boolean {
+	private humu(msg: Message): boolean | HandlerResult {
 		if (!msg.includes(["踏んで"])) return false;
-
-		msg.reply(
-			msg.friend.love >= 5
-				? serifs.core.humu.love
-				: msg.friend.love <= -3
-					? serifs.core.humu.hate
-					: serifs.core.humu.normal,
-		);
-
-		return true;
+		
+		msg.friend.decLove();
+		return {
+			reaction: "confused",
+		};
 	}
 
 	@bindThis
-	private batou(msg: Message): boolean {
+	private batou(msg: Message): boolean | HandlerResult {
 		if (!msg.includes(["罵倒して", "罵って"])) return false;
-
-		msg.reply(
-			msg.friend.love >= 5
-				? serifs.core.batou.love
-				: msg.friend.love <= -5
-					? serifs.core.batou.hate
-					: serifs.core.batou.normal,
-		);
-
-		return true;
+		
+		msg.friend.decLove();
+		return {
+			reaction: "confused",
+		};
 	}
 
 	@bindThis
@@ -301,7 +268,7 @@ export default class extends Module {
 
 		return true;
 	}
-
+/*
 	@bindThis
 	private ote(msg: Message): boolean {
 		if (!msg.or(["お手"])) return false;
@@ -341,12 +308,43 @@ export default class extends Module {
 
 	@bindThis
 	private shutdown(msg: Message): boolean | HandlerResult {
-		if (!msg.includes(["shutdown"])) return false;
+		if (!msg.includes(["reboot"])) return false;
 
 		msg.reply(serifs.core.shutdown);
 
 		return {
 			reaction: "confused",
+		};
+	}
+*/
+	@bindThis
+	private access(msg: Message): boolean | HandlerResult {
+		if (!msg.includes(["reboot"])) return false;
+
+		msg.reply(serifs.core.access);
+
+		return {
+			reaction: "white_check_mark",
+		};
+	}
+	@bindThis
+	private connect(msg: Message): boolean | HandlerResult {
+		if (!msg.includes(["reboot"])) return false;
+
+		msg.reply(serifs.core.connect);
+
+		return {
+			reaction: "tada",
+		};
+	}
+	@bindThis
+	private reboot(msg: Message): boolean | HandlerResult {
+		if (!msg.includes(["reboot"])) return false;
+
+		msg.reply(serifs.core.reboot);
+
+		return {
+			reaction: "sob",
 		};
 	}
 
@@ -372,7 +370,7 @@ export default class extends Module {
 			reaction: "angry",
 		};
 	}
-
+/*
 	@bindThis
 	private breathinginai(msg: Message): boolean | HandlerResult {
 		if (!msg.includes(["吸う"])) return false;
@@ -391,4 +389,5 @@ export default class extends Module {
 
 		return true;
 	}
+*/
 }
