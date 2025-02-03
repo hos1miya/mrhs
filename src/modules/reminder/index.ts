@@ -86,7 +86,7 @@ export default class extends Module {
 					reminds
 						.map(
 							(remind) =>
-								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} \$[unixtime ${remind.expiredAt}]`,
+								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} \$[unixtime ${remind.expiredAt / 1000}]`,
 						)
 						.join("\n"),
 				{ visibility : msg.visibility },
