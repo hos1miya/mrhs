@@ -89,7 +89,7 @@ export default class Message {
 			await sleep(2000);
 		}
 
-		const visibleIds = (opts?.visibility && opts.visibility == "specified") ? [ this.friend.userId ] : undefined;
+		const visibleIds = (opts?.visibility && opts.visibility === 'specified') ? [ this.friend.userId ] : undefined;
 
 		return await this.subaru.post({
 			replyId: this.note.id,
@@ -97,7 +97,7 @@ export default class Message {
 			fileIds: opts?.file ? [opts?.file.id] : undefined,
 			cw: opts?.cw,
 			renoteId: opts?.renote,
-			visibility: opts?.visibility ? opts?.visibility : "home",
+			visibility: opts?.visibility ? opts?.visibility : 'home',
 			visibleUserIds: visibleIds ? visibleIds : undefined,
 		});
 	}

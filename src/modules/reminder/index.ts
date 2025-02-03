@@ -222,12 +222,16 @@ export default class extends Module {
 		// 期限切れならお知らせしてリマインダー解除
 		if ( Date.now() > remind.expiredAt ) {
 			try {
-				const visibleIds = (remind.visibility && remind.visibility == "specified") ? [ friend.doc.userId ] : undefined;
+				const visibleIds = remind.visibility === 'specified' ? [ friend.doc.userId ] : undefined;
 				await this.subaru.post({
-					renoteId:
-						remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+					renoteId: ['specified', 'followers'].includes(remind.visibility)
+						? undefined
+						: remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+					replyId: !['specified', 'followers'].includes(remind.visibility)
+						? undefined
+						: remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
 					text: acct(friend.doc.user) + " " + serifs.reminder.expired,
-					visibility : remind.visibility ? remind.visibility : "home",
+					visibility : remind.visibility ? remind.visibility : 'home',
 					visibleUserIds: visibleIds ? visibleIds : undefined,
 				});
 			} finally {
@@ -241,12 +245,16 @@ export default class extends Module {
 
 		let reply;
 		try {
-			const visibleIds = (remind.visibility && remind.visibility == "specified") ? [ friend.doc.userId ] : undefined;
+			const visibleIds = remind.visibility === 'specified' ? [ friend.doc.userId ] : undefined;
 			reply = await this.subaru.post({
-				renoteId:
-					remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+				renoteId: ['specified', 'followers'].includes(remind.visibility)
+					? undefined
+					: remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+				replyId: !['specified', 'followers'].includes(remind.visibility)
+					? undefined
+					: remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
 				text: acct(friend.doc.user) + " " + serifs.reminder.notify(friend.name),
-				visibility : remind.visibility ? remind.visibility : "home",
+				visibility : remind.visibility ? remind.visibility : 'home',
 				visibleUserIds: visibleIds ? visibleIds : undefined,
 			});
 		} catch (err) {
