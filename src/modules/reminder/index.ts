@@ -19,6 +19,7 @@ export default class extends Module {
 		times: number; // 催促した回数(使うのか？)
 		createdAt: number;
 		expiredAt: number;
+		visibility: string;
 	}>;
 
 	@bindThis
@@ -88,6 +89,7 @@ export default class extends Module {
 								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} (残り${Math.floor((remind.expiredAt - Date.now()) / (1000 * 60 * 60 * 24))}日 ${Math.floor(((remind.expiredAt - Date.now()) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))}時間 ${Math.floor(((remind.expiredAt - Date.now()) % (1000 * 60 * 60)) / (1000 * 60))}分)`,
 						)
 						.join("\n"),
+				{ visibility : msg.visibility },
 			);
 			return true;
 		}
@@ -126,10 +128,9 @@ export default class extends Module {
 
 		if (
 			(thing === "" && msg.quoteId == null) ||
-			msg.visibility === "followers" ||
 			times > 5184000000
 		) {
-			msg.reply(serifs.reminder.invalid);
+			msg.reply(serifs.reminder.invalid, { visibility : msg.visibility });
 			return {
 				reaction: "🆖",
 				immediate: true,
@@ -144,6 +145,7 @@ export default class extends Module {
 			times: 0,
 			createdAt: Date.now(),
 			expiredAt: minutes + hours === 0 ? endOfToday.getTime() + times : now.getTime() + times,	// 分と時間が0なら終了日の23:59:59までにする、分と時間の指定があれば指定時間まで
+			visibility: msg.visibility,
 		});
 
 		// メンションをsubscribe
@@ -193,10 +195,11 @@ export default class extends Module {
 				done
 					? getSerif(serifs.reminder.done(msg.friend.name))
 					: serifs.reminder.cancel,
+				{ visibility : msg.visibility },
 			);
 			return;
 		} else if (isOneself === false) {
-			msg.reply(serifs.reminder.doneFromInvalidUser);
+			msg.reply(serifs.reminder.doneFromInvalidUser, { visibility : "home" });
 			return;
 		} else {
 			return false;
@@ -223,6 +226,7 @@ export default class extends Module {
 					renoteId:
 						remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
 					text: acct(friend.doc.user) + " " + serifs.reminder.expired,
+					visibility : remind.visibility ? remind.visibility : "home",
 				});
 			} finally {
 				this.unsubscribeReply(
@@ -239,6 +243,7 @@ export default class extends Module {
 				renoteId:
 					remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
 				text: acct(friend.doc.user) + " " + serifs.reminder.notify(friend.name),
+				visibility : remind.visibility ? remind.visibility : "home",
 			});
 		} catch (err) {
 			// renote対象が消されていたらリマインダー解除

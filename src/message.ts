@@ -78,6 +78,7 @@ export default class Message {
 			cw?: string;
 			renote?: string;
 			immediate?: boolean;
+			visibility?: string;
 		},
 	) {
 		if (text == null) return;
@@ -94,6 +95,7 @@ export default class Message {
 			fileIds: opts?.file ? [opts?.file.id] : undefined,
 			cw: opts?.cw,
 			renoteId: opts?.renote,
+			visibility: opts?.visibility ? opts?.visibility : "home",
 		});
 	}
 
