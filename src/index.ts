@@ -40,10 +40,12 @@ import CheckCustomEmojisModule from "./modules/check-custom-emojis/index.js";
 //import EarthQuakeWarningModule from "./modules/earthquake_warning/index.js";
 import DenChatModule from "./modules/denchat/index.js";
 
-console.log("   __    ____  _____  ___ ");
-console.log("  /__\\  (_  _)(  _  )/ __)");
-console.log(" /(__)\\  _)(_  )(_)( \\__ \\");
-console.log("(__)(__)(____)(_____)(___/\n");
+console.log(" ____    _____   _   _   _____   _____    __         __  ");
+console.log("|    \\  | ____| | \\ | | |  ___| |  _  |  / _| _   _ |_ \\ ");
+console.log("| |\\  | | |___  |  \\| | | |     | | | | | /  | |_| |  \\ |");
+console.log("| | | | |  ___| | \\ | | | |     | | | | ||   |  _  |   ||");
+console.log("| |/  | | |___  | |\\  | | |___  | |_| | | \\_ |_| |_| _/ |");
+console.log("|____/  |_____| |_| \\_| |_____| |_____|  \\__|       |__/ \\ ");
 
 function log(msg: string): void {
 	_log(`[Boot]: ${msg}`);
