@@ -151,6 +151,7 @@ export default class extends Module {
 				"カスタムえもじチェック",
 				"カスタムえもじを調べて",
 				"カスタムえもじを確認",
+				"カスタム絵文字チェック",
 			])
 		) {
 			return false;

@@ -89,30 +89,41 @@ promiseRetry(
 		// @ts-ignore
 		new すばる(account, [
 			new CoreModule(),
+
+			// 他モジュールで引っ掛かるワードが含まれていそうなものから優先初期化
+			// chatはフリートークなので一番引っかかる可能性が高い
 			new DenChatModule(),
-			new EmojiModule(),
+
+			// reminderも内容が自由なのでその次に引っかかる可能性が高い
+			new ReminderModule(),
+
+			// 挨拶もちょっとした文章が付いてきそう
+			new TalkModule(),						// 挨拶
+
+			// コマンド単体で実行されやすいもの(余計な文章が少なそうなもの)は後
+			new ChartModule(),					// チャート
+			new PingModule(),						// ping
+			new PollModule(),						// 投票(/poll)
+			new CheckCustomEmojisModule(),		// カスタム絵文字チェック(福笑いが発火すると困るので福笑いより先)
+			new EmojiModule(),					// 福笑い(絵文字)
+			new FortuneModule(),				// 占い
+			new GuessingGameModule(),		// 数当て
+			new KazutoriModule(),				// 数取り
+			//new ReversiModule(),			// リバーシ
+			new TimerModule(),					// タイマー(～分・～時間)
+			new DiceModule(),						// サイコロ(～d～)
+			new MazeModule(),						// 迷路
+
+			// mentionHook無しモジュール
 			new EmojiReactModule(),
-			new FortuneModule(),
-			new GuessingGameModule(),
-			new KazutoriModule(),
-			//new ReversiModule(),
-			new TimerModule(),
-			new DiceModule(),
-			new TalkModule(),
-			new PingModule(),
 			new WelcomeModule(),
 			new ServerModule(),
 			new FollowModule(),
 			new BirthdayModule(),
 			new ValentineModule(),
 			new KeywordModule(),
-			new MazeModule(),
-			new ChartModule(),
 			new SleepReportModule(),
 			new NotingModule(),
-			new PollModule(),
-			new ReminderModule(),
-			new CheckCustomEmojisModule(),
 			//new EarthQuakeWarningModule(),
 		]);
 	})
