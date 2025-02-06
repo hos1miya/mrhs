@@ -36,6 +36,8 @@ export default class extends Module {
 		const message = msg.text.replace(/\d+[dD]\d+/g, results.join(" "))
 		msg.reply(serifs.dice.done(message));
 
-		return true;
+		return {
+			reaction: '🎲'
+		};
 	}
 }
