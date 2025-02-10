@@ -66,6 +66,28 @@ export default class extends Module {
 			};
 		}
 
+		// 何らかの理由で残っている終了したリマインドを削除
+		if (
+			text.startsWith("reminds gc") ||
+			text.startsWith("todos gc")
+		) {
+			const reminds = this.reminds.find({
+				userId: msg.userId,
+			});
+			reminds.forEach((remind) => {
+				if ( Date.now() > remind.expiredAt ) {
+					this.unsubscribeReply(
+						remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
+					);
+					this.reminds.remove(remind);
+				}
+			});
+			return {
+				reaction: "✨",
+				immediate: true,
+			};
+		}
+
 		if (
 			text.startsWith("reminds") ||
 			text.startsWith("todos") ||
