@@ -9,7 +9,7 @@ export default class extends Module {
 	@bindThis
 	public install() {
 		this.crawleValentine();
-		setInterval(this.crawleValentine, 1000 * 60 * 3);
+		setInterval(this.crawleValentine, 1000 * 60 * 60 * 2);
 
 		return {};
 	}
@@ -21,8 +21,9 @@ export default class extends Module {
 	private crawleValentine() {
 		const now = new Date();
 
-		const isValentine = now.getMonth() == 1 && now.getDate() == 14;
+		const isValentine = now.getMonth() == (2 - 1) && now.getDate() == 14;
 		if (!isValentine) return;
+		this.log('Valentine Module Triggered...');
 
 		const date = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
@@ -37,6 +38,8 @@ export default class extends Module {
 			const data = friend.getPerModulesData(this);
 
 			if (data.lastChocolated == date) return;
+
+			this.log(`Give chocolate to ${friend.userId}`);
 
 			data.lastChocolated = date;
 			friend.setPerModulesData(this, data);
