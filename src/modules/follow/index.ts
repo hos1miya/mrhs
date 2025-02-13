@@ -16,8 +16,8 @@ export default class extends Module {
 	@bindThis
 	private async mentionHook(msg: Message) {
 		this.log("Follow requested");
-		console.log("User host:", msg.user.host);
-		console.log("User following status:", msg.user.isFollowing ? msg.user.isFollowing : 'unknown');
+		this.log(`User host: ${msg.user.host}`);
+		this.log(`User following status: ${msg.user.isFollowing ? msg.user.isFollowing : 'unknown'}`);
 		const allowedHosts = config.followAllowedHosts || [];
 		const followExcludeInstances = config.followExcludeInstances || [];
 
@@ -46,7 +46,8 @@ export default class extends Module {
 						reaction: msg.friend.love >= 0 ? "like" : null,
 					};
 				} catch (error) {
-					console.error("Failed to follow user:", error);
+					if(error instanceof Error) this.log(`Failed to follow user: ${error.message}`);
+					else this.log(`Failed to follow user: unknown API error`);
 					return false;
 				}
 			} else if (!msg.user.isFollowing) {

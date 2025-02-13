@@ -3,7 +3,7 @@
 import * as fs from "fs";
 import { bindThis } from "@/decorators.js";
 import loki from "lokijs";
-import got from "got";
+import got, { HTTPError, RequestError, TimeoutError } from "got";
 import { FormData, File } from "formdata-node";
 import chalk from "chalk";
 import { v4 as uuid } from "uuid";
