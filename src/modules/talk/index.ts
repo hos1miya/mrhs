@@ -45,6 +45,7 @@ export default class extends Module {
 	@bindThis
 	private greet(msg: Message): boolean {
 		if (msg.text == null) return false;
+		this.log("Greet requested");
 
 		const incLove = () => {
 			//#region 1日に1回だけ親愛度を上げる
@@ -141,6 +142,7 @@ export default class extends Module {
 	@bindThis
 	private omedeto(msg: Message): boolean {
 		if (!msg.includes(["おめでと"])) return false;
+		this.log("Omedeto requested");
 
 		msg.reply(serifs.core.omedeto(msg.friend.name));
 
@@ -190,6 +192,7 @@ export default class extends Module {
 	@bindThis
 	private kawaii(msg: Message): boolean {
 		if (!msg.includes(["かわいい", "可愛い"])) return false;
+		this.log("Kawaii requested");
 
 		msg.reply(serifs.core.kawaii);
 
@@ -199,6 +202,7 @@ export default class extends Module {
 	@bindThis
 	private suki(msg: Message): boolean {
 		if (!msg.or(["好き", "すき"])) return false;
+		this.log("Suki requested");
 
 		msg.reply(serifs.core.suki);
 
@@ -208,6 +212,7 @@ export default class extends Module {
 	@bindThis
 	private hug(msg: Message): boolean {
 		if (!msg.or(["ぎゅ", "むぎゅ", /^はぐ(し(て|よ|よう)?)?$/])) return false;
+		this.log("Hug requested");
 
 		//#region 前のハグから1分経ってない場合は返信しない
 		// これは、「ハグ」と言って「ぎゅー」と返信したとき、相手が
@@ -242,6 +247,7 @@ export default class extends Module {
 	@bindThis
 	private humu(msg: Message): boolean | HandlerResult {
 		if (!msg.includes(["踏んで"])) return false;
+		this.log("Humu requested");
 		
 		msg.friend.decLove();
 		return {
@@ -252,6 +258,7 @@ export default class extends Module {
 	@bindThis
 	private batou(msg: Message): boolean | HandlerResult {
 		if (!msg.includes(["罵倒して", "罵って"])) return false;
+		this.log("Batou requested");
 		
 		msg.friend.decLove();
 		return {
@@ -263,6 +270,7 @@ export default class extends Module {
 	private itai(msg: Message): boolean {
 		if (!msg.or(["痛い", "いたい"]) && !msg.extractedText.endsWith("痛い"))
 			return false;
+		this.log("Itai requested");
 
 		msg.reply(serifs.core.itai(msg.friend.name));
 
@@ -319,7 +327,8 @@ export default class extends Module {
 */
 	@bindThis
 	private access(msg: Message): boolean | HandlerResult {
-		if (!msg.includes(["reboot"])) return false;
+		if (!msg.includes(["アクセス"])) return false;
+		this.log("Access requested");
 
 		msg.reply(serifs.core.access);
 
@@ -329,7 +338,8 @@ export default class extends Module {
 	}
 	@bindThis
 	private connect(msg: Message): boolean | HandlerResult {
-		if (!msg.includes(["reboot"])) return false;
+		if (!msg.includes(["リンク"])) return false;
+		this.log("Connect requested");
 
 		msg.reply(serifs.core.connect);
 
@@ -339,7 +349,8 @@ export default class extends Module {
 	}
 	@bindThis
 	private reboot(msg: Message): boolean | HandlerResult {
-		if (!msg.includes(["reboot"])) return false;
+		if (!msg.includes(["リブート"])) return false;
+		this.log("Reboot requested");
 
 		msg.reply(serifs.core.reboot);
 
@@ -362,6 +373,7 @@ export default class extends Module {
 			])
 		)
 			return false;
+		this.log("sexualharassment requested");
 
 		msg.friend.decLove();
 		msg.reply(serifs.core.sexualharassment);

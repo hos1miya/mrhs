@@ -15,8 +15,9 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
+		this.log("Follow requested");
 		console.log("User host:", msg.user.host);
-		console.log("User following status:", msg.user.isFollowing);
+		console.log("User following status:", msg.user.isFollowing ? msg.user.isFollowing : 'unknown');
 		const allowedHosts = config.followAllowedHosts || [];
 		const followExcludeInstances = config.followExcludeInstances || [];
 
@@ -46,12 +47,15 @@ export default class extends Module {
 					};
 				} catch (error) {
 					console.error("Failed to follow user:", error);
+					return false;
 				}
 			} else if (!msg.user.isFollowing) {
 				await msg.reply("きみは誰？");
 				return {
 					reaction: msg.friend.love >= 0 ? "hmm" : null,
 				};
+			} else { // フォロー済み
+				return false;
 			}
 		} else {
 			return false;

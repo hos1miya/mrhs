@@ -33,7 +33,11 @@ export default class extends Module {
 		const minutes = minutesQuery ? parseInt(minutesQuery[1], 10) : 0;
 		const hours = hoursQuery ? parseInt(hoursQuery[1], 10) : 0;
 
-		if (!(secondsQuery || minutesQuery || hoursQuery)) return false;
+		if (!(secondsQuery || minutesQuery || hoursQuery)) {
+			return false;
+		} else {
+			this.log("Timer requested");
+		}
 
 		if (seconds + minutes + hours == 0) {
 			msg.reply(serifs.timer.invalid);

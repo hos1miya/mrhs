@@ -62,6 +62,7 @@ export default class extends Module {
 	@bindThis
 	private async mentionHook(msg: Message) {
 		if (msg.includes(["迷路"])) {
+			this.log("Maze requested");
 			let size: string | null = null;
 			if (msg.includes(["接待"])) size = "veryEasy";
 			if (

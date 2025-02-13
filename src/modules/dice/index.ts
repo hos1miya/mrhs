@@ -19,7 +19,11 @@ export default class extends Module {
 
 		const query = msg.text.match(/([0-9]+)[dD]([0-9]+)/);
 
-		if (query == null) return false;
+		if (query == null) {
+			return false;
+		} else {
+			this.log("Dice requested");
+		}
 
 		const times = parseInt(query[1], 10);
 		const dice = parseInt(query[2], 10);

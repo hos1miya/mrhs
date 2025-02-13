@@ -15,6 +15,7 @@ export default class extends Module {
 	@bindThis
 	private async mentionHook(msg: Message) {
 		if (msg.text && msg.text.includes("ping")) {
+			this.log("Ping received");
 			msg.reply("ぽん。", {
 				immediate: true,
 			});

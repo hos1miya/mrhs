@@ -43,8 +43,11 @@ export default class extends Module {
 			!text.startsWith("todo") &&
 			!text.startsWith("リマインド") &&
 			!text.startsWith("やること")
-		)
+		) {
 			return false;
+		} else {
+			this.log("Reminder requested");
+		}
 
 		// 全てのリマインドを削除
 		if (
@@ -60,6 +63,7 @@ export default class extends Module {
 				);
 				this.reminds.remove(remind);
 			});
+			this.log(`Reminder for user ${msg.userId} purged.`);
 			return {
 				reaction: "🚮",
 				immediate: true,
@@ -195,6 +199,7 @@ export default class extends Module {
 
 	@bindThis
 	private async contextHook(key: any, msg: Message, data: any) {
+		this.log('contextHook...');
 		if (msg.text == null) return;
 
 		const remind = this.reminds.findOne({

@@ -155,8 +155,9 @@ export default class すばる {
 
 		// メンションされたとき
 		mainStream.on("mention", async (data) => {
+			this.log('mainStream mention received...');
 			if (data.userId == this.account.id) return; // 自分は弾く
-			if (data.text && data.text.startsWith("@" + this.account.username)) {
+			if (data.text && data.text.includes("@" + this.account.username)) {
 				// MissingKeyのバグで投稿が非公開扱いになる
 				if (data.text == null)
 					data = await this.api("notes/show", { noteId: data.id });
@@ -166,6 +167,7 @@ export default class すばる {
 
 		// 返信されたとき
 		mainStream.on("reply", async (data) => {
+			this.log('mainStream reply received...');
 			if (data.userId == this.account.id) return; // 自分は弾く
 			if (data.text && data.text.startsWith("@" + this.account.username))
 				return;

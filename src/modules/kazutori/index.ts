@@ -42,7 +42,11 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
-		if (!msg.includes(["数取り"])) return false;
+		if (!msg.includes(["数取り"])) {
+			return false;
+		} else {
+			this.log("Kazutori game requested");
+		}
 
 		const games = this.games.find({});
 
@@ -84,6 +88,7 @@ export default class extends Module {
 
 	@bindThis
 	private async contextHook(key: any, msg: Message) {
+		this.log('contextHook...');
 		if (msg.text == null)
 			return {
 				reaction: "hmm",

@@ -34,6 +34,7 @@ export default class extends Module {
 	private transferBegin(msg: Message): boolean {
 		if (!msg.text) return false;
 		if (!msg.includes(["引継", "引き継ぎ", "引越", "引っ越し"])) return false;
+		this.log("CoreModule TransferBegin requested");
 
 		const code = msg.friend.generateTransferCode();
 
@@ -46,6 +47,7 @@ export default class extends Module {
 	private transferEnd(msg: Message): boolean {
 		if (!msg.text) return false;
 		if (!msg.text.startsWith("「") || !msg.text.endsWith("」")) return false;
+		this.log("CoreModule TransferEnd requested");
 
 		const code = msg.text.substring(1, msg.text.length - 1);
 
@@ -65,6 +67,7 @@ export default class extends Module {
 		if (!msg.text) return false;
 		if (!msg.text.includes('って呼んで')) return false;
 		if (msg.text.startsWith('って呼んで')) return false;
+		this.log("CoreModule SetName requested");
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const name = msg.text.replace(/^@[a-zA-Z0-9_]+\s*/, '').match(/^(.+?)って呼んで/)![1];
@@ -99,6 +102,7 @@ export default class extends Module {
 	private modules(msg: Message): boolean {
 		if (!msg.text) return false;
 		if (!msg.or(["modules"])) return false;
+		this.log("CoreModule Modules requested");
 
 		let text = "```\n";
 
@@ -119,6 +123,7 @@ export default class extends Module {
 	private version(msg: Message): boolean {
 		if (!msg.text) return false;
 		if (!msg.or(["v", "version", "バージョン"])) return false;
+		this.log("CoreModule Version requested");
 
 		msg.reply(`\`\`\`\nv${this.subaru.version}\n\`\`\``, {
 			immediate: true,
@@ -129,6 +134,7 @@ export default class extends Module {
 
 	@bindThis
 	private async contextHook(key: any, msg: Message, data: any) {
+		this.log('contextHook...');
 		if (msg.text == null) return;
 
 		const done = () => {

@@ -30,7 +30,11 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
-		if (!msg.includes(["数当て", "数あて"])) return false;
+		if (!msg.includes(["数当て", "数あて"])) {
+			return false;
+		} else {
+			this.log("Guessing game requested");
+		}
 
 		const exist = this.guesses.findOne({
 			userId: msg.userId,
@@ -57,6 +61,7 @@ export default class extends Module {
 
 	@bindThis
 	private async contextHook(key: any, msg: Message) {
+		this.log('contextHook...');
 		if (msg.text == null) return;
 
 		const exist = this.guesses.findOne({

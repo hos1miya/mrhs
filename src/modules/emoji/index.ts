@@ -139,6 +139,7 @@ export default class extends Module {
 	@bindThis
 	private async mentionHook(msg: Message) {
 		if (msg.includes(["顔文字", "絵文字", "emoji", "福笑い"])) {
+			this.log("Emoji requested");
 			const hand = hands[Math.floor(Math.random() * hands.length)];
 			const face = faces[Math.floor(Math.random() * faces.length)];
 			const emoji = Array.isArray(hand)

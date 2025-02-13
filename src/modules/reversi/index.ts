@@ -56,6 +56,7 @@ export default class extends Module {
 	private async mentionHook(msg: Message) {
 		if (msg.includes(["リバーシ", "オセロ", "reversi", "othello"])) {
 			if (config.reversiEnabled) {
+				this.log("Reversi requested");
 				msg.reply(serifs.reversi.ok);
 
 				if (msg.includes(["接待"])) {
