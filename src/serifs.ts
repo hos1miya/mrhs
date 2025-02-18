@@ -154,6 +154,8 @@ export default {
 			name
 				? `おかえりなさい、${name}。待ってたよ。`
 				: `おかえりなさい。待ってたよ。`,
+
+		help: "使い方を説明するね。\`<>\`の項目はオプションだよ。\ndenchat:\n	\`@subaru denchat [話したい内容]\`\n	お話ができるよ。たまに間違ったことを言っちゃうかもしれないのは許してね。\nreminder:\n	\`@subaru reminder(またはtodo) [内容] <目標時間(分・時間・日を指定可能)>\`\n	やることをメモして12時間ごとにお知らせするよ。お知らせに「やった」や「やめた」と返信すると解除できるよ。\n	\`@subaru reminders(またはtodos)\`\n	で、一覧を確認できるよ。もし、全部解除したいときは\n	\`@subaru reminders(またはtodos) purge\`\n	と送ってね。\n",
 	},
 
 	keyword: {

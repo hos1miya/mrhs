@@ -139,7 +139,7 @@ export default class extends Module {
 		if (!msg.or(["help", "使い方", "ヘルプ"])) return false;
 		this.log("CoreModule Help requested");
 
-		msg.reply(`\`\`\`\nHelp is pending...\n\`\`\``, {
+		msg.reply(serifs.core.help, {
 			immediate: true,
 		});
 
