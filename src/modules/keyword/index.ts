@@ -1,9 +1,11 @@
 import { bindThis } from "@/decorators.js";
 import loki from "lokijs";
 import Module from "@/module.js";
+import Message from "@/message.js";
 import config from "@/config.js";
 import serifs from "@/serifs.js";
 import { mecab } from "./mecab.js";
+import type { Note } from "@/misskey/note.js";
 
 function kanaToHira(str: string) {
 	return str.replace(/[\u30a1-\u30f6]/g, (match) => {
@@ -30,7 +32,9 @@ export default class extends Module {
 
 		setInterval(this.learn, 1000 * 60 * 30);
 
-		return {};
+		return {
+			mentionHook: this.mentionHook,
+		};
 	}
 
 	@bindThis
@@ -85,4 +89,38 @@ export default class extends Module {
 			text: text,
 		});
 	}
+
+	@bindThis
+	private async mentionHook(msg: Message) {
+		if (
+			!msg.replyId && msg.text &&
+			(msg.text.startsWith("忘れて") ||
+			 msg.text.startsWith("忘却"))
+		) {
+			return false;
+		} else {
+			this.log("Keyword remove requested");
+		}
+
+		const note: Note = await this.subaru.api("notes/show", { noteId: msg.replyId }) as Note;
+		if(!note.text) return false;
+		const match = note.text.match(/\(([^.]+)\.\.\.\.\..*\)/);
+		if(!match) return false;
+
+		this.log(`matched keyword: ${match}`);
+
+		const learnedKeywords = this.learnedKeywords.find({
+			keyword: match[1],
+		});
+		learnedKeywords.forEach((learnedKeyword) => {
+			if ( match[1] === learnedKeyword.keyword) {
+				this.learnedKeywords.remove(learnedKeyword);
+			}
+		});
+		return {
+			reaction: "🆗",
+			immediate: true,
+		};
+	}
 }
+
