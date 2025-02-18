@@ -26,7 +26,8 @@ export default class extends Module {
 			this.transferEnd(msg) ||
 			this.setName(msg) ||
 			this.modules(msg) ||
-			this.version(msg)
+			this.version(msg) ||
+			this.help(msg)
 		);
 	}
 
@@ -126,6 +127,19 @@ export default class extends Module {
 		this.log("CoreModule Version requested");
 
 		msg.reply(`\`\`\`\nv${this.subaru.version}\n\`\`\``, {
+			immediate: true,
+		});
+
+		return true;
+	}
+
+	@bindThis
+	private help(msg: Message): boolean {
+		if (!msg.text) return false;
+		if (!msg.or(["help", "使い方", "ヘルプ"])) return false;
+		this.log("CoreModule Help requested");
+
+		msg.reply(`\`\`\`\nHelp is pending...\n\`\`\``, {
 			immediate: true,
 		});
 
