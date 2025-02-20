@@ -25,6 +25,7 @@ type Config = {
 	followExcludeInstances?: string[];
 	mazeEnable?: boolean;
 	pollEnable?: boolean;
+	serverObserveEnable?: boolean;
 };
 
 // import config from '../config.json' assert { type: 'json' };

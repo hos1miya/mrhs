@@ -438,6 +438,11 @@ export default {
 		see: (item) => `外で休んでいたら、${item}を見つけたよ。`,
 		expire: (item) => `${item}、無くなっちゃったみたい。`,
 	},
+
+	serverObserve: {
+		requirePermission: `うーん、ぼくにはその権限がないみたい。もう一度確認してみてくれないかな？`,
+		deliverDelay: `配送に問題が出ているみたい。再起動してみたらどうかな？`,
+	},
 };
 
 export function getSerif(variant: string | string[]): string {

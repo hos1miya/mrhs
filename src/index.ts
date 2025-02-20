@@ -39,6 +39,7 @@ import ReminderModule from "./modules/reminder/index.js";
 import CheckCustomEmojisModule from "./modules/check-custom-emojis/index.js";
 //import EarthQuakeWarningModule from "./modules/earthquake_warning/index.js";
 import DenChatModule from "./modules/denchat/index.js";
+import ServerObserveModule from "./modules/server-observe/index.js";
 
 console.log(" ____    _____   _   _   _____   _____    __         __  ");
 console.log("|    \\  | ____| | \\ | | |  ___| |  _  |  / _| _   _ |_ \\ ");
@@ -125,6 +126,7 @@ promiseRetry(
 			new SleepReportModule(),
 			new NotingModule(),
 			//new EarthQuakeWarningModule(),
+			new ServerObserveModule(),
 		]);
 	})
 	.catch((e) => {
