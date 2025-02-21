@@ -301,7 +301,7 @@ export default class extends Module {
 		});
 
 		// タイマーセット
-		this.setTimeoutWithPersistence(NOTIFY_INTERVAL, {
+		this.setTimeoutWithPersistence(NOTIFY_INTERVAL > remind.expiredAt - Date.now() ? remind.expiredAt + 100 : NOTIFY_INTERVAL, {
 			id: remind.id,
 		});
 	}
