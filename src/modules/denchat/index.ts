@@ -292,7 +292,7 @@ export default class extends Module {
 		// msg.idをもとにnotes/conversationを呼び出し、会話中のidかチェック
 		const conversationData : any = await this.subaru.api('notes/conversation', { noteId: msg.id });
 
-		// denchatHistに該当のポストが見つかった場合は会話中のためmentionHoonkでは対応しない
+		// denchatHistに該当のポストが見つかった場合は会話中のためmentionHookでは対応しない
 		let exist : DenChatHist | null = null;
 		if (conversationData != undefined) {
 			for (const message of conversationData) {
@@ -557,7 +557,8 @@ export default class extends Module {
 		}
 
 		this.log('Replying...');
-		msg.reply(serifs.denchat.post(text)).then(reply => {
+		// 公開範囲がパブリックであればホームに変更
+		msg.reply(serifs.denchat.post(text), { visibility: msg.visibility !== 'public' ? msg.visibility : 'home' }).then(reply => {
 			// 履歴に登録
 			if (!exist.history) {
 				exist.history = [];

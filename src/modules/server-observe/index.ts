@@ -46,6 +46,7 @@ export default class extends Module {
 
 		this.subaru.post({
 			text: serifs.serverObserve.deliverDelay,
+			visibility: "followers",
 		});
 	}
 }

@@ -115,7 +115,7 @@ export default class extends Module {
 								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} \$[unixtime ${remind.expiredAt / 1000}]`,
 						)
 						.join("\n"),
-				{ visibility : msg.visibility },
+				{ visibility : msg.visibility === "specified" ? msg.visibility : "followers" },
 			);
 			return true;
 		}
