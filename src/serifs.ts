@@ -441,7 +441,8 @@ export default {
 
 	serverObserve: {
 		requirePermission: `うーん、ぼくにはその権限がないみたい。もう一度確認してみてくれないかな？`,
-		deliverDelay: `配送に問題が出ているみたい。再起動してみたらどうかな？`,
+		deliverDelay: `配送に問題が出ているみたい。5分後に再起動してみるね。`,
+		rebootCanceled: `わかった。今回はやめておくね。`,
 	},
 };
 
