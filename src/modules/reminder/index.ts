@@ -115,7 +115,7 @@ export default class extends Module {
 								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} \$[unixtime ${remind.expiredAt / 1000}]`,
 						)
 						.join("\n"),
-				{ visibility : msg.visibility === "specified" ? msg.visibility : "followers" },
+				{ visibility : "specified" },
 			);
 			return true;
 		}
@@ -301,7 +301,7 @@ export default class extends Module {
 		});
 
 		// タイマーセット
-		this.setTimeoutWithPersistence(NOTIFY_INTERVAL > remind.expiredAt - Date.now() ? remind.expiredAt + 100 : NOTIFY_INTERVAL, {
+		this.setTimeoutWithPersistence(NOTIFY_INTERVAL > remind.expiredAt - Date.now() ? remind.expiredAt - Date.now() : NOTIFY_INTERVAL, {
 			id: remind.id,
 		});
 	}

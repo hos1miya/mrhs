@@ -114,12 +114,12 @@ promiseRetry(
 			new TimerModule(),					// タイマー(～分・～時間)
 			new DiceModule(),						// サイコロ(～d～)
 			new MazeModule(),						// 迷路
+			new FollowModule(),					// フォロー
 
 			// mentionHook無しモジュール
 			new EmojiReactModule(),
 			new WelcomeModule(),
 			new ServerModule(),
-			new FollowModule(),
 			new BirthdayModule(),
 			new ValentineModule(),
 			new KeywordModule(),
