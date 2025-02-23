@@ -45,7 +45,6 @@ export default class extends Module {
 	@bindThis
 	private greet(msg: Message): boolean {
 		if (msg.text == null) return false;
-		this.log("Greet requested");
 
 		const incLove = () => {
 			//#region 1日に1回だけ親愛度を上げる

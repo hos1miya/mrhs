@@ -93,8 +93,9 @@ export default class extends Module {
 	@bindThis
 	private async mentionHook(msg: Message) {
 		if (
-			!msg.replyId && msg.text &&
-			(msg.text.startsWith("忘れて") ||
+			!msg.replyId ||
+			!msg.text ||
+			!(msg.text.startsWith("忘れて") ||
 			 msg.text.startsWith("忘却"))
 		) {
 			return false;

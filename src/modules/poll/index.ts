@@ -141,7 +141,11 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
-		if (!msg.or(["/poll"]) || msg.user.username !== config.master) {
+		if (
+			!msg.extractedText ||
+			!msg.extractedText.startsWith("/poll") ||
+			msg.user.username !== config.master
+		) {
 			return false;
 		} else {
 			this.log("Manualy poll requested");

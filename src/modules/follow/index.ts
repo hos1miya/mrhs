@@ -15,50 +15,51 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
-		this.log("Follow requested");
+		if (
+			!msg.text ||
+			!(msg.text.includes("フォロー") ||
+				msg.text.includes("フォロバ") ||
+				msg.text.includes("follow me"))
+		) {
+			return false;
+		} else {
+			this.log("Follow requested");
+		}
+		
 		this.log(`User host: ${msg.user.host}`);
 		this.log(`User following status: ${msg.user.isFollowing ? msg.user.isFollowing : 'unknown'}`);
 		const allowedHosts = config.followAllowedHosts || [];
 		const followExcludeInstances = config.followExcludeInstances || [];
 
-		if (
-			msg.text &&
-			(msg.text.includes("フォロー") ||
-				msg.text.includes("フォロバ") ||
-				msg.text.includes("follow me"))
+     if (
+       !msg.user.isFollowing &&
+       (msg.user.host == null ||
+         msg.user.host === '' ||
+         this.shouldFollowUser(
+           msg.user.host,
+           allowedHosts,
+           followExcludeInstances
+       	)
+			)
 		) {
-      if (
-        !msg.user.isFollowing &&
-        (msg.user.host == null ||
-          msg.user.host === '' ||
-          this.shouldFollowUser(
-            msg.user.host,
-            allowedHosts,
-            followExcludeInstances
-        	)
-				)
-			) {
-				try {
-					await this.subaru.api("following/create", {
-						userId: msg.userId,
-					});
-					return {
-						reaction: msg.friend.love >= 0 ? "like" : null,
-					};
-				} catch (error) {
-					if(error instanceof Error) this.log(`Failed to follow user: ${error.message}`);
-					else this.log(`Failed to follow user: unknown API error`);
-					return false;
-				}
-			} else if (!msg.user.isFollowing) {
-				await msg.reply("きみは誰？");
+			try {
+				await this.subaru.api("following/create", {
+					userId: msg.userId,
+				});
 				return {
-					reaction: msg.friend.love >= 0 ? "hmm" : null,
+					reaction: msg.friend.love >= 0 ? "like" : null,
 				};
-			} else { // フォロー済み
+			} catch (error) {
+				if(error instanceof Error) this.log(`Failed to follow user: ${error.message}`);
+				else this.log(`Failed to follow user: unknown API error`);
 				return false;
 			}
-		} else {
+		} else if (!msg.user.isFollowing) {
+			await msg.reply("きみは誰？");
+			return {
+				reaction: msg.friend.love >= 0 ? "hmm" : null,
+			};
+		} else { // フォロー済み
 			return false;
 		}
 	}
