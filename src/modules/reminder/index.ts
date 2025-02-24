@@ -129,7 +129,7 @@ export default class extends Module {
 		const words = text.split(" "); // スペースで分割
 		let thing, time;
 		
-		if (words.length > 1 && words[words.length - 1].match(/^\d+(分|時間|日)$/)) {
+		if (words.length > 1 && words[words.length - 1].match(/\d+(分|時間|日)$/)) {
 			// 最後の単語が「○分」「○時間」「○日」なら time
 			time = words.pop(); // 配列の最後の要素を time に
 		} else {
@@ -137,10 +137,10 @@ export default class extends Module {
 		}
 		
 		thing = words.join(" "); // 残りを thing に
-
-		const minutesQuery = (time || "").match(/([0-9]+)分/);
-		const hoursQuery = (time || "").match(/([0-9]+)時間/);
-		const daysQuery = (time || "").match(/([0-9]+)日/);
+		
+		const minutesQuery = (time || "").match(/.*([0-9]+)分.*/);
+		const hoursQuery = (time || "").match(/.*([0-9]+)時間.*/);
+		const daysQuery = (time || "").match(/.*([0-9]+)日.*/);
 		const minutes = minutesQuery ? parseInt(minutesQuery[1], 10) : 0;
 		const hours = hoursQuery ? parseInt(hoursQuery[1], 10) : 0;
 		const days = daysQuery ? parseInt(daysQuery[1], 10) : 0;
