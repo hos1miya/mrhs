@@ -430,7 +430,7 @@ export default class extends Module {
 			}
 		}
 
-		// 確率をクリアし、親愛度が指定以上、かつ、Botでない場合のみ実行
+		// 確率をクリアし、親愛度が正の値、かつ、Botでない場合のみ実行
 		if (Math.random() < this.randomTalkProbability) {
 			this.log('DenChat(randomtalk) targeted: ' + choseNote.id);
 		} else {
@@ -438,7 +438,7 @@ export default class extends Module {
 			return false;
 		}
 		const friend: Friend | null = this.subaru.lookupFriend(choseNote.userId);
-		if (friend == null || friend.love < 7) {
+		if (friend == null || friend.love < 0) {
 			this.log('DenChat(randomtalk) end.Because there was not enough affection.');
 			return false;
 		} else if (choseNote.user.isBot) {
