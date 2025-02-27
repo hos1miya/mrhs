@@ -390,6 +390,7 @@ export default class すばる {
 	 */
 	@bindThis
 	public async post(param: any) {
+		param.via = 'すばる';
 		const res : any = await this.api("notes/create", param);
 		return res.createdNote;
 	}
