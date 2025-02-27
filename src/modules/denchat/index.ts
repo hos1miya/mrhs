@@ -397,7 +397,7 @@ export default class extends Module {
 	@bindThis
 	private async denchatRandomTalk() {
 		this.log('DenChat(randomtalk) started');
-		const tl : any = await this.subaru.api('notes/local-timeline', {
+		const tl : any = await this.subaru.api('notes/home-timeline', {
 			limit: 30
 		});
 		const interestedNotes = tl.filter(note =>
