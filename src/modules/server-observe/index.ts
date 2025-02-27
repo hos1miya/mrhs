@@ -53,6 +53,13 @@ export default class extends Module {
 			this.subaru.api('admin/reboot-server', { confirm: 'yes' });
 			deliverProblem = false;
 		}
+		// 前回問題があったが今回問題なかった場合は再起動キャンセルの旨を投稿
+		else if (this.lastDeliverProblem) {
+			this.subaru.post({
+				text: serifs.serverObserve.deliverDelayDisappeared,
+				visibility: "followers",
+			});
+		}
 		
 		// フラグをリセット
 		this.lastDeliverProblem = false;
