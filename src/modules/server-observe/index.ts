@@ -50,7 +50,7 @@ export default class extends Module {
 
 		// 前回も今回も問題があった場合、鯖再起動・今回は問題なしとする
 		if (this.lastDeliverProblem && deliverProblem) {
-			this.subaru.api('admin/server-reboot', { confirm: 'yes' });
+			this.subaru.api('admin/reboot-server', { confirm: 'yes' });
 			deliverProblem = false;
 		}
 		
