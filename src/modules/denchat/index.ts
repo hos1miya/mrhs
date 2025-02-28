@@ -387,6 +387,7 @@ export default class extends Module {
 		const result = await this.handleDenChat(exist, msg);
 
 		if (result) {
+			msg.friend.incLove();
 			return {
 				reaction: 'like'
 			};

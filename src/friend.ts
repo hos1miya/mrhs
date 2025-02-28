@@ -129,7 +129,7 @@ export default class Friend {
 		this.doc.todayLoveIncrements = (this.doc.todayLoveIncrements || 0) + amount;
 		this.save();
 
-		this.subaru.log(`💗 ${this.userId} +${amount}`);
+		this.subaru.log(`💗 ${this.userId} +${amount} (Current: ${this.doc.love})`);
 	}
 
 	@bindThis
