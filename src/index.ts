@@ -13,6 +13,7 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pkg = require("../package.json");
 
+import SafetyModule from "./modules/safety/index.js";
 import CoreModule from "./modules/core/index.js";
 import TalkModule from "./modules/talk/index.js";
 import BirthdayModule from "./modules/birthday/index.js";
@@ -89,6 +90,7 @@ promiseRetry(
 		// すばる起動
 		// @ts-ignore
 		new すばる(account, [
+			new SafetyModule(),
 			new CoreModule(),
 
 			// 他モジュールで引っ掛かるワードが含まれていそうなものから優先初期化
