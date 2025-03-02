@@ -15,7 +15,7 @@ export default class extends Module {
 		if (!config.serverObserveEnable) return {};
 
 		this.checkDeliverDelay();
-		setInterval(this.checkDeliverDelay, 1000 * 60 * 5);
+		setInterval(this.checkDeliverDelay, 1000 * 60 * 1);
 
 		return {
 			contextHook: this.contextHook,
@@ -25,7 +25,7 @@ export default class extends Module {
 	@bindThis
 	private async checkDeliverDelay() {
 		const now = new Date();
-		if (now.getMinutes() % 3 !== 0) return;
+		if (now.getMinutes() % 5 !== 0) return;
 		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 10) return;
 
 		const data: [string, number, boolean][] = await this.subaru.api("admin/queue/deliver-delayed", {});
