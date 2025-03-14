@@ -40,7 +40,7 @@ export default class extends Module {
 		let deliverProblem = false;
 		for (const host of hosts) {
 			try {
-				const response = await fetch(`https://${host}`, { method: "GET" });
+				const response = await fetch(`https://${host}/nodeinfo/2.0`, { method: "GET" });
 				if (response.status === 200) {
 					deliverProblem = true;
 				}
