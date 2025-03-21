@@ -117,7 +117,7 @@ export default class extends Module {
 			minute: '2-digit'
 		});
 		// 設定のプロンプトに加え、現在時刻を渡す
-		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "であり、これは回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。";
+		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "であり、これは回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
 		// 名前を伝えておく
 		if (denChat.friendName != undefined) {
 			systemInstructionText += "なお、会話相手の名前は" + denChat.friendName + "とする。";
