@@ -26,6 +26,8 @@ type Config = {
 	mazeEnable?: boolean;
 	pollEnable?: boolean;
 	serverObserveEnable?: boolean;
+	keywordNoteEnabled?: boolean;
+	keywordNoteIntervalMinutes?: string;
 };
 
 // import config from '../config.json' assert { type: 'json' };

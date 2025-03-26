@@ -6,6 +6,7 @@ import config from "@/config.js";
 import serifs from "@/serifs.js";
 import { mecab } from "./mecab.js";
 import type { Note } from "@/misskey/note.js";
+import * as postGemini from "../denchat/index.js"
 
 function kanaToHira(str: string) {
 	return str.replace(/[\u30a1-\u30f6]/g, (match) => {
@@ -14,7 +15,10 @@ function kanaToHira(str: string) {
 	});
 }
 
+const KEYWORDNOTE_DEFAULT_INTERVAL = 1000 * 60 * 60 * 12;// デフォルトのrandomTalk間隔
+
 export default class extends Module {
+	private keywordNoteIntervalMinutes: number = KEYWORDNOTE_DEFAULT_INTERVAL;
 	public readonly name = "keyword";
 
 	private learnedKeywords: loki.Collection<{
@@ -30,8 +34,19 @@ export default class extends Module {
 			indices: ["userId"],
 		});
 
+		// 一定間隔で学習
 		setInterval(this.learn, 1000 * 60 * 30);
 
+		// キーワードノート 間隔(分)は設定されていればそちらを採用(設定がなければデフォルトを採用)
+		if (config.keywordNoteIntervalMinutes != undefined && !Number.isNaN(Number.parseInt(config.keywordNoteIntervalMinutes))) {
+			this.keywordNoteIntervalMinutes = 1000 * 60 * Number.parseInt(config.keywordNoteIntervalMinutes);
+		}
+		this.log('keywordNoteEnabled:' + config.keywordNoteEnabled);
+		this.log('keywordNoteIntervalMinutes:' + (this.keywordNoteIntervalMinutes / (60 * 1000)));
+		if (config.keywordNoteEnabled) {
+			setInterval(this.keywordNote, this.keywordNoteIntervalMinutes);
+		}
+		
 		return {
 			mentionHook: this.mentionHook,
 		};
@@ -88,6 +103,14 @@ export default class extends Module {
 		this.subaru.post({
 			text: text,
 		});
+	}
+
+	@bindThis
+	private async keywordNote() {
+		if (this.learnedKeywords.data.length === 0) return;
+
+		const keyword = this.learnedKeywords.data[Math.floor(Math.random() * this.learnedKeywords.data.length)].keyword;
+		return await postGemini.noteAboutKeyword(keyword);
 	}
 
 	@bindThis

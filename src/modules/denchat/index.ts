@@ -105,7 +105,7 @@ export default class extends Module {
 	}
 
 	@bindThis
-	private async genTextByGemini(denChat: DenChat, files:base64File[]) {
+	private async genTextByGemini(denChat: DenChat, files?: base64File[]) {
 		this.log('Generate Text By Gemini...');
 		let parts: GeminiParts = [];
 		const now = new Date().toLocaleString('ja-JP', {
@@ -126,7 +126,7 @@ export default class extends Module {
 
 		parts = [{text: denChat.question}];
 		// ファイルが存在する場合、画像を添付して問い合わせ
-		if (files.length >= 1) {
+		if (files !== undefined && files.length >= 1) {
 			for (const file of files){
 				parts.push(
 					{
@@ -603,4 +603,47 @@ export default class extends Module {
 			this.denchatHist.remove(exist);
 		}
 	}
+
+	@bindThis
+	public async noteAboutKeyword(keyword: string): Promise<boolean> {
+		this.log('KeywordNote started');
+
+		let text: string, denChat: DenChat;
+		let prompt: string = '';
+		if (config.prompt) {
+			prompt = config.prompt;
+		}
+
+		let question = `「${keyword}」について解説して。`;
+		if (question == undefined || question.length == 0) return false;
+		question = question.trim();
+
+		// geminiの場合、APIキーが必須
+		if (!config.geminiApiKey) {
+			return false;
+		}
+
+		denChat = {
+			question: question,
+			prompt: prompt,
+			api: GEMINI_20_FLASH_API,
+			key: config.geminiApiKey
+		};
+
+		// Gemini問い合わせ
+		text = await this.genTextByGemini(denChat);
+		if (text == null) {
+			this.log('The result is invalid. It seems that tokens and other items need to be reviewed.')
+			this.subaru.post({ text: serifs.denchat.error });
+			return false;
+		}
+	
+		this.log('Noting...');
+		this.subaru.post({ text: text });
+		return true;
+	}
 }
+export async function noteAboutKeyword(text: string): Promise<boolean> {
+	return await noteAboutKeyword(text);
+}
+
