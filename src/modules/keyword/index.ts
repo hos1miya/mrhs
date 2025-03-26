@@ -118,8 +118,8 @@ export default class extends Module {
 		if (
 			!msg.replyId ||
 			!msg.text ||
-			!(msg.text.startsWith("忘れて") ||
-			 msg.text.startsWith("忘却"))
+			!(msg.extractedText.startsWith("忘れて") ||
+			 msg.extractedText.startsWith("忘却"))
 		) {
 			return false;
 		} else {
