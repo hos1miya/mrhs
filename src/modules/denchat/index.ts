@@ -614,7 +614,7 @@ export default class extends Module {
 			prompt = config.prompt;
 		}
 
-		let question = `「${keyword}」について解説して。`;
+		let question = `返信相手は不特定多数だと思って、「${keyword}」について紹介して。最初の文章は、今の時間に合わせたあいさつにしてね。`;
 		if (question == undefined || question.length == 0) return false;
 		question = question.trim();
 
@@ -642,8 +642,5 @@ export default class extends Module {
 		this.subaru.post({ text: text });
 		return true;
 	}
-}
-export async function noteAboutKeyword(text: string): Promise<boolean> {
-	return await noteAboutKeyword(text);
 }
 

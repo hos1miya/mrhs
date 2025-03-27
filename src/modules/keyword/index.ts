@@ -6,7 +6,7 @@ import config from "@/config.js";
 import serifs from "@/serifs.js";
 import { mecab } from "./mecab.js";
 import type { Note } from "@/misskey/note.js";
-import * as postGemini from "../denchat/index.js"
+import Denchat from "../denchat/index.js";
 
 function kanaToHira(str: string) {
 	return str.replace(/[\u30a1-\u30f6]/g, (match) => {
@@ -110,7 +110,9 @@ export default class extends Module {
 		if (this.learnedKeywords.data.length === 0) return;
 
 		const keyword = this.learnedKeywords.data[Math.floor(Math.random() * this.learnedKeywords.data.length)].keyword;
-		return await postGemini.noteAboutKeyword(keyword);
+		const denchatModule = this.subaru.modules.find((m) => m.name === 'denchat') as Denchat;
+
+		return await denchatModule.noteAboutKeyword(keyword);
 	}
 
 	@bindThis
