@@ -117,6 +117,7 @@ promiseRetry(
 			new DiceModule(),						// サイコロ(～d～)
 			new MazeModule(),						// 迷路
 			new FollowModule(),					// フォロー
+			new KeywordModule(),				// 単語紹介
 
 			// mentionHook無しモジュール
 			new EmojiReactModule(),
@@ -124,7 +125,6 @@ promiseRetry(
 			new ServerModule(),
 			new BirthdayModule(),
 			new ValentineModule(),
-			new KeywordModule(),
 			new SleepReportModule(),
 			new NotingModule(),
 			//new EarthQuakeWarningModule(),
