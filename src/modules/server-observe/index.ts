@@ -78,7 +78,10 @@ export default class extends Module {
 	@bindThis
 	private async contextHook(key: any, msg: Message, data: any) {
 		this.log('contextHook...');
-		if (msg.text == null) return;
+		if (
+			msg.text == null ||
+			msg.user.username !== config.master
+		) return;
 
 		if (msg.includes(["キャンセル", "ストップ", "中止", "やめて"])) {
 			this.lastDeliverProblem = false;
