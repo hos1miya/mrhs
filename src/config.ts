@@ -28,6 +28,7 @@ type Config = {
 	serverObserveEnable?: boolean;
 	keywordNoteEnabled?: boolean;
 	keywordNoteIntervalMinutes?: string;
+	followBackConfirmable?: boolean;
 };
 
 // import config from '../config.json' assert { type: 'json' };

@@ -1,13 +1,23 @@
 import { bindThis } from "@/decorators.js";
+import loki from "lokijs";
 import Module from "@/module.js";
 import Message from "@/message.js";
 import config from "@/config.js";
 
 export default class extends Module {
 	public readonly name = "follow";
+	
+	private pendingReqs!: loki.Collection<{
+		userId: string;
+		requestedAt: number;
+	}>;
 
 	@bindThis
 	public install() {
+		this.pendingReqs = this.subaru.getCollection("followRequests", {
+			indices: ["userId"],
+		});
+
 		return {
 			mentionHook: this.mentionHook,
 		};
@@ -31,15 +41,18 @@ export default class extends Module {
 		const allowedHosts = config.followAllowedHosts || [];
 		const followExcludeInstances = config.followExcludeInstances || [];
 
-     if (
-       !msg.user.isFollowing &&
-       (msg.user.host == null ||
-         msg.user.host === '' ||
-         this.shouldFollowUser(
-           msg.user.host,
-           allowedHosts,
-           followExcludeInstances
-       	)
+		// ここにフォローリクエスト転送処理追加(followBackConfirmable)
+
+    	if (
+       		!msg.user.isFollowing &&
+       		(
+				msg.user.host == null ||
+        		msg.user.host === '' ||
+        		this.shouldFollowUser(
+           			msg.user.host,
+           			allowedHosts,
+           			followExcludeInstances
+       			)
 			)
 		) {
 			try {
@@ -64,26 +77,26 @@ export default class extends Module {
 		}
 	}
 
-  /**
-   * リモートユーザーをフォローすべきかどうかを判定する
-   * @param host ユーザーのホスト
-   * @param allowedHosts 許可されたホストのリスト
-   * @param excludedHosts 除外されたホストのリスト
-   * @returns フォローすべき場合はtrue、そうでない場合はfalse
+  	/**
+   	 * リモートユーザーをフォローすべきかどうかを判定する
+     * @param host ユーザーのホスト
+     * @param allowedHosts 許可されたホストのリスト
+     * @param excludedHosts 除外されたホストのリスト
+     * @returns フォローすべき場合はtrue、そうでない場合はfalse
 	 * From https://github.com/Ruruke/ai
-   */
-  private shouldFollowUser(
-    host: string,
-    allowedHosts: string[],
-    excludedHosts: string[]
-  ): boolean {
-    // followAllowedHostsが存在する場合、followExcludeInstancesを無視する
-    if (allowedHosts.length > 0) {
-      return this.isHostAllowed(host, allowedHosts);
-    }
-    // followAllowedHostsが存在しない場合、followExcludeInstancesを適用する
-    return !this.isHostExcluded(host, excludedHosts);
-  }
+   	 */
+  	private shouldFollowUser(
+    	host: string,
+	    allowedHosts: string[],
+    	excludedHosts: string[]
+  	): boolean {
+    	// followAllowedHostsが存在する場合、followExcludeInstancesを無視する
+    	if (allowedHosts.length > 0) {
+      		return this.isHostAllowed(host, allowedHosts);
+    	}
+    	// followAllowedHostsが存在しない場合、followExcludeInstancesを適用する
+    	return !this.isHostExcluded(host, excludedHosts);
+  	}
 
 	private isHostAllowed(host: string, allowedHosts: string[]): boolean {
 		for (const allowedHost of allowedHosts) {
