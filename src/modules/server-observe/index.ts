@@ -80,7 +80,8 @@ export default class extends Module {
 		this.log('contextHook...');
 		if (
 			msg.text == null ||
-			msg.user.username !== config.master
+			msg.user.username !== config.master ||
+			msg.user.host !== null
 		) return;
 
 		if (msg.includes(["キャンセル", "ストップ", "中止", "やめて"])) {

@@ -117,7 +117,7 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
-		if (msg.extractedText.startsWith("単語紹介") && msg.user.username === config.master) {
+		if (msg.extractedText.startsWith("単語紹介") && msg.user.username === config.master && msg.user.host == null) {
 			await this.keywordNote();
 			return {
 				reaction: "🆗",

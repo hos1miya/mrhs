@@ -144,7 +144,8 @@ export default class extends Module {
 		if (
 			!msg.extractedText ||
 			!msg.extractedText.startsWith("/poll") ||
-			msg.user.username !== config.master
+			msg.user.username !== config.master ||
+			msg.user.host !== null
 		) {
 			return false;
 		} else {
