@@ -11,4 +11,6 @@ export type Note = {
 		expiredAfter: number;
 		multiple: boolean;
 	} | null;
+	cw?: string;
+	visibility?: string;
 };

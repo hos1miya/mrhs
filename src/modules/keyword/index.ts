@@ -21,7 +21,7 @@ export default class extends Module {
 	private keywordNoteIntervalMinutes: number = KEYWORDNOTE_DEFAULT_INTERVAL;
 	public readonly name = "keyword";
 
-	private learnedKeywords: loki.Collection<{
+	private learnedKeywords!: loki.Collection<{
 		keyword: string;
 		learnedAt: number;
 	}>;
@@ -56,7 +56,7 @@ export default class extends Module {
 	private async learn() {
 		const tl = await this.subaru.api("notes/hybrid-timeline", {
 			limit: 30,
-		});
+		}) as Note[];
 
 		const interestedNotes = tl.filter(
 			(note) =>
@@ -69,11 +69,23 @@ export default class extends Module {
 		let keywords: string[][] = [];
 
 		for (const note of interestedNotes) {
-			const tokens = await mecab(note.text, config.mecab, config.mecabDic);
-			const keywordsInThisNote = tokens.filter(
-				(token) => token[2] == "固有名詞" && token[8] != null,
-			);
-			keywords = keywords.concat(keywordsInThisNote);
+			// ミュート判定
+			const sinceId = note.id.slice(0, -2) + "00";
+			const untilId = note.id.slice(0, -2) + "00";
+			const isMuted = await this.subaru.api("i/get-word-muted-notes", {
+				sinceId: sinceId,
+				untilId: untilId,
+			}) as Note[];
+			// ミュートされていなければ単語を抽出
+			if (isMuted.length > 0) {
+				const tokens = await mecab(note.text ?? '', config.mecab, config.mecabDic);
+				const keywordsInThisNote = tokens.filter(
+					(token) => token[2] == "固有名詞" && token[8] != null,
+				);
+				keywords = keywords.concat(keywordsInThisNote);
+			} else {
+				this.log(`Skipped ${note.id} (contain muted words)`);
+			}
 		}
 
 		if (keywords.length === 0) return;
