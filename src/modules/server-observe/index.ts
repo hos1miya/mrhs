@@ -5,7 +5,7 @@ import Message from "@/message.js";
 import config from "@/config.js";
 
 export default class extends Module {
-	public readonly name = "serverObserve";
+	public readonly name = 'serverObserve';
 
 	private lastDeliverProblem = false;
 	private lastRebootCanceled;
@@ -28,19 +28,19 @@ export default class extends Module {
 		if (now.getMinutes() % 5 !== 0) return;
 		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 10) return;
 
-		const data: [string, number, boolean][] = await this.subaru.api("admin/queue/deliver-delayed", {});
+		const data: [string, number, boolean][] = await this.subaru.api('admin/queue/deliver-delayed', {}) as [string, number, boolean][];
 
 		if(!data) return;
 
 		const hosts = data
     	.filter(row => row.includes(true)) // true を含む配列を取得
     	.map(row => row[0]) // 各配列の最初の要素（ホスト）を取得
-    	.filter(host => typeof host === "string") as string[]; // 文字列のホストだけ残す
+    	.filter(host => typeof host === 'string') as string[]; // 文字列のホストだけ残す
 
 		let deliverProblem = false;
 		for (const host of hosts) {
 			try {
-				const response = await fetch(`https://${host}/nodeinfo/2.0`, { method: "GET" });
+				const response = await fetch(`https://${host}/`, { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
 				if (response.status === 200) {
 					deliverProblem = true;
 				}
@@ -57,7 +57,7 @@ export default class extends Module {
 		else if (this.lastDeliverProblem) {
 			this.subaru.post({
 				text: serifs.serverObserve.deliverDelayDisappeared,
-				visibility: "followers",
+				visibility: 'followers',
 			});
 		}
 		
@@ -70,7 +70,7 @@ export default class extends Module {
 		// 今回は問題があった場合、告知・フラグを立てる
 		this.subaru.post({
 			text: serifs.serverObserve.deliverDelay,
-			visibility: "followers",
+			visibility: 'followers',
 		});
 		this.lastDeliverProblem = true;
 	}
@@ -84,7 +84,7 @@ export default class extends Module {
 			msg.user.host !== null
 		) return;
 
-		if (msg.includes(["キャンセル", "ストップ", "中止", "やめて"])) {
+		if (msg.includes(['キャンセル', 'ストップ', '中止', 'やめて'])) {
 			this.lastDeliverProblem = false;
 			this.lastRebootCanceled = Date.now();
 			msg.reply(serifs.serverObserve.rebootCanceled, { visibility: msg.visibility });
