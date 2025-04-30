@@ -146,9 +146,9 @@ export default class extends Module {
 			this.log("Keyword remove requested");
 		}
 
-		const note: Note = await this.subaru.api("notes/show", { noteId: msg.replyId }) as Note;
-		if(!note.text) return false;
-		const match = note.text.match(/\(([^.]+)\.\.\.\.\..*\)/);
+		const originNote: Note = await this.subaru.api("notes/show", { noteId: msg.replyId }) as Note;
+		if(!originNote.text) return false;
+		const match = originNote.text.match(/\(([^.]+)\.\.\.\.\..*\)/);
 		if(!match) return false;
 
 		this.log(`matched keyword: ${match}`);
@@ -157,10 +157,21 @@ export default class extends Module {
 			keyword: match[1],
 		});
 		learnedKeywords.forEach((learnedKeyword) => {
-			if ( match[1] === learnedKeyword.keyword) {
+			if (match[1] === learnedKeyword.keyword) {
 				this.learnedKeywords.remove(learnedKeyword);
 			}
 		});
+		
+		// ミュートワード追加処理
+		const rawAcctData = await this.subaru.api('i', {});
+		const currentMutedWords = ((rawAcctData as { mutedWords: string[][] })?.mutedWords ?? []).flat();
+		const updatedMutedWords = Array.from(new Set([...currentMutedWords, match[1]])).map(word => [word]);
+		await this.subaru.api('i/update', { mutedWords: updatedMutedWords });
+
+		// 直近の対象ノートをミュート
+		const unsafeNote: Note[] = await this.subaru.api('notes/search', { limit: 1, query: match[1], untilId: originNote.id }) as Note[];
+		await this.subaru.api('notes/mutes/create', { noteId: unsafeNote[0].id });
+
 		return {
 			reaction: "🆗",
 			immediate: true,
