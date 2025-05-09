@@ -65,7 +65,7 @@ const GEMINI_15_PRO_API = 'https://generativelanguage.googleapis.com/v1beta/mode
 const PLAMO_API = 'https://platform.preferredai.jp/api/completion/v1/chat/completions';
 
 const RANDOMTALK_DEFAULT_PROBABILITY = 0.02;// デフォルトのrandomTalk確率
-const TIMEOUT_TIME = 1000 * 60 * 60 * 0.5;// denchatの返信を監視する時間
+const TIMEOUT_TIME = 1000 * 60 * 60 * 1;// denchatの返信を監視する時間
 const RANDOMTALK_DEFAULT_INTERVAL = 1000 * 60 * 60 * 12;// デフォルトのrandomTalk間隔
 
 export default class extends Module {
