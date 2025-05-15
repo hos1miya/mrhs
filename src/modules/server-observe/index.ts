@@ -18,7 +18,7 @@ export default class extends Module {
 		setInterval(this.checkDeliverDelay, 1000 * 60 * 1);
 
 		return {
-			contextHook: this.contextHook,
+			mentionHook: this.mentionHook,
 		};
 	}
 
@@ -40,7 +40,7 @@ export default class extends Module {
 		let deliverProblem = false;
 		for (const host of hosts) {
 			try {
-				const response = await fetch(`https://${host}/`, { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
+				const response = await fetch(`https://${host}/nodeinfo/2.0`, { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
 				if (response.status === 200) {
 					deliverProblem = true;
 				}
@@ -76,19 +76,28 @@ export default class extends Module {
 	}
 
 	@bindThis
-	private async contextHook(key: any, msg: Message, data: any) {
-		this.log('contextHook...');
+	private async mentionHook(msg: Message) {
 		if (
-			msg.text == null ||
+			!msg.replyId ||
+			msg.extractedText == null ||
 			msg.user.username !== config.master ||
-			msg.user.host !== null
-		) return;
-
-		if (msg.includes(['キャンセル', 'ストップ', '中止', 'やめて'])) {
-			this.lastDeliverProblem = false;
-			this.lastRebootCanceled = Date.now();
-			msg.reply(serifs.serverObserve.rebootCanceled, { visibility: msg.visibility });
+			msg.user.host !== null ||
+			!(
+			 	msg.extractedText.startsWith('キャンセル') ||
+			 	msg.extractedText.startsWith('ストップ') ||
+			 	msg.extractedText.startsWith('中止') ||
+			 	msg.extractedText.startsWith('やめて')
+			)
+		) {
+			return false;
+		} else {
+			this.log('Reboot cancel requested');
 		}
+
+		this.lastDeliverProblem = false;
+		this.lastRebootCanceled = Date.now();
+		msg.reply(serifs.serverObserve.rebootCanceled, { visibility: msg.visibility });
+
 		return {
 			reaction: "🆗",
 			immediate: true,
