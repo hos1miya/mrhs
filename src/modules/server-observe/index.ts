@@ -26,7 +26,7 @@ export default class extends Module {
 	private async checkDeliverDelay() {
 		const now = new Date();
 		if (now.getMinutes() % 5 !== 0) return;
-		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 10) return;
+		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 15) return;
 
 		const data: [string, number, boolean][] = await this.subaru.api('admin/queue/deliver-delayed', {}) as [string, number, boolean][];
 
@@ -82,6 +82,7 @@ export default class extends Module {
 			msg.extractedText == null ||
 			msg.user.username !== config.master ||
 			msg.user.host !== null ||
+			(this.lastRebootCanceled && new Date() < this.lastRebootCanceled + 1000 * 60) ||
 			!(
 			 	msg.extractedText.startsWith('キャンセル') ||
 			 	msg.extractedText.startsWith('ストップ') ||
