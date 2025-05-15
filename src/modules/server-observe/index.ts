@@ -26,7 +26,7 @@ export default class extends Module {
 	private async checkDeliverDelay() {
 		const now = new Date();
 		if (now.getMinutes() % 5 !== 0) return;
-		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 15) return;
+		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 20) return;
 
 		const data: [string, number, boolean][] = await this.subaru.api('admin/queue/deliver-delayed', {}) as [string, number, boolean][];
 
@@ -51,6 +51,7 @@ export default class extends Module {
 		// 前回も今回も問題があった場合、鯖再起動・今回は問題なしとする
 		if (this.lastDeliverProblem && deliverProblem) {
 			this.subaru.api('admin/reboot-server', { confirm: 'yes' });
+			this.lastRebootCanceled = Date.now();
 			deliverProblem = false;
 		}
 		// 前回問題があったが今回問題なかった場合は再起動キャンセルの旨を投稿
