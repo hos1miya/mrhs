@@ -110,6 +110,10 @@ export default class extends Module {
 			});
 
 			text = serifs.keyword.learned(keyword[0], kanaToHira(keyword[8]));
+
+			// 学習元と思われるノートにふぁぼ
+			const learnedNote: Note[] = await this.subaru.api('notes/search', { limit: 1, query: keyword[0] }) as Note[];
+			await this.subaru.api('notes/reactions/create', { noteId: learnedNote[0].id, reaction: '📕' });
 		}
 
 		this.subaru.post({
