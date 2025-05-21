@@ -18,7 +18,7 @@ export default class extends Module {
 		setInterval(this.checkDeliverDelay, 1000 * 60 * 1);
 
 		return {
-			mentionHook: this.mentionHook,
+			contextHook: this.contextHook,
 		};
 	}
 
@@ -52,8 +52,10 @@ export default class extends Module {
 		if (this.lastDeliverProblem && deliverProblem) {
 			this.subaru.api('admin/reboot-server', { confirm: 'yes' });
 			this.lastRebootCanceled = Date.now();
+			this.unsubscribeReply(null);
 			deliverProblem = false;
 		}
+
 		// 前回問題があったが今回問題なかった場合は再起動キャンセルの旨を投稿
 		else if (this.lastDeliverProblem) {
 			this.subaru.post({
@@ -69,17 +71,19 @@ export default class extends Module {
 		if (!deliverProblem) return;
 
 		// 今回は問題があった場合、告知・フラグを立てる
-		this.subaru.post({
+		const post = await this.subaru.post({
 			text: serifs.serverObserve.deliverDelay,
 			visibility: 'followers',
 		});
 		this.lastDeliverProblem = true;
+		this.subscribeReply(null, post.id);
 	}
 
 	@bindThis
-	private async mentionHook(msg: Message) {
+	private async contextHook(key: any, msg: Message) {
+		this.log('contextHook...');
+		if (msg.text == null)	return;
 		if (
-			!msg.replyId ||
 			msg.extractedText == null ||
 			msg.user.username !== config.master ||
 			msg.user.host !== null ||
@@ -91,7 +95,7 @@ export default class extends Module {
 			 	msg.extractedText.startsWith('やめて')
 			)
 		) {
-			return false;
+			return;
 		} else {
 			this.log('Reboot cancel requested');
 		}
@@ -100,9 +104,10 @@ export default class extends Module {
 		this.lastRebootCanceled = Date.now();
 		msg.reply(serifs.serverObserve.rebootCanceled, { visibility: msg.visibility });
 
+		this.unsubscribeReply(null);
+
 		return {
 			reaction: "🆗",
-			immediate: true,
 		};
 	}
 }
