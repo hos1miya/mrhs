@@ -91,7 +91,7 @@ export default class extends Module {
 		}
 
 		// aid
-		if (text.startsWith("aid")) {
+		else if (text.startsWith("aid")) {
 			try {
 
 				let date: Date;
