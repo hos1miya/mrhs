@@ -67,7 +67,7 @@ export default class extends Module {
 				if (targetText.trim() === '') {
 					// 日時未指定 → 現在時刻（JST→UTC補正）
 					const now = new Date();
-					date = new Date(now.getTime() - 9 * 60 * 60 * 1000);
+					date = new Date(now.getTime() * 60 * 60 * 1000);
 				} else {
 					// 日時指定あり
 					const [d, t = '00:00'] = targetText.trim().split(/\s+/);
@@ -100,7 +100,7 @@ export default class extends Module {
 				if (targetText.trim() === '') {
 					// 日時が未指定 → 現在日時（JST）
 					const now = new Date();
-					date = new Date(now.getTime() - 9 * 60 * 60 * 1000); // JST → UTC補正
+					date = new Date(now.getTime() * 60 * 60 * 1000); // JST → UTC補正
 				} else {
 					// 指定あり → パース
 					const [d, t = '00:00'] = targetText.trim().split(/\s+/);
