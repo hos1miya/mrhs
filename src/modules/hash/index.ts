@@ -65,9 +65,8 @@ export default class extends Module {
 				const nodeId = this.generateNodeId(4); // 4文字の個体IDを生成
 
 				if (targetText.trim() === '') {
-					// 日時未指定 → 現在時刻（JST→UTC補正）
-					const now = new Date();
-					date = new Date(now.getTime() * 60 * 60 * 1000);
+					// 日時未指定 → 現在時刻
+					date = new Date();
 				} else {
 					// 日時指定あり
 					const [d, t = '00:00'] = targetText.trim().split(/\s+/);
@@ -98,9 +97,8 @@ export default class extends Module {
 				let date: Date;
 		
 				if (targetText.trim() === '') {
-					// 日時が未指定 → 現在日時（JST）
-					const now = new Date();
-					date = new Date(now.getTime() * 60 * 60 * 1000); // JST → UTC補正
+					// 日時が未指定 → 現在日時
+					date = new Date();
 				} else {
 					// 指定あり → パース
 					const [d, t = '00:00'] = targetText.trim().split(/\s+/);
