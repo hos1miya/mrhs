@@ -445,6 +445,10 @@ export default {
 		deliverDelayDisappeared: `配送の問題は解消したみたい。今は再起動しなくても大丈夫だね。`,
 		rebootCanceled: `わかった。今回はやめておくね。`,
 	},
+
+	hash: {
+		invalidDate: `日付形式が間違っているみたい。「20xx-mm-dd hh:mm」の形にしてくれるかな？`,
+	},
 };
 
 export function getSerif(variant: string | string[]): string {
