@@ -1,4 +1,5 @@
 import { bindThis } from "@/decorators.js";
+import { createHash } from "crypto";
 import Module from "@/module.js";
 import Message from "@/message.js";
 
@@ -35,12 +36,12 @@ export default class extends Module {
 
 		// md5
 		if (text.startsWith("md5 ")) {
-			
+			resultHash = createHash("md5").update(targetText).digest("hex");
 		}
 
 		// sha256
 		if (text.startsWith("sha256 ")) {
-			
+			resultHash = createHash("sha256").update(targetText).digest("hex");
 		}
 
 		// aid
