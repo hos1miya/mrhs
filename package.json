@@ -1,5 +1,5 @@
 {
-	"_v": "2.0.1-mrhs.250525.4",
+	"_v": "2.0.1-mrhs.250602.1",
 	"type": "module",
 	"main": "./built/index.js",
 	"scripts": {

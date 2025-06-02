@@ -69,6 +69,10 @@ export default class extends Module {
 		let keywords: string[][] = [];
 
 		for (const note of interestedNotes) {
+			// すばる自身のノートならスキップ
+			let skip: boolean = false;
+			if (note.userId === this.subaru.account.id) skip = true;
+			
 			// ミュート判定
 			const sinceId = note.id.slice(0, -2) + "00";
 			const untilId = note.id.slice(0, -2) + "00";
@@ -76,15 +80,16 @@ export default class extends Module {
 				sinceId: sinceId,
 				untilId: untilId,
 			}) as Note[];
-			// ミュートされていなければ単語を抽出
-			if (isMuted.length === 0) {
+
+			// スキップかミュートされていなければ単語を抽出
+			if (!skip && isMuted.length === 0) {
 				const tokens = await mecab(note.text ?? '', config.mecab, config.mecabDic);
 				const keywordsInThisNote = tokens.filter(
 					(token) => token[2] == "固有名詞" && token[8] != null,
 				);
 				keywords = keywords.concat(keywordsInThisNote);
 			} else {
-				this.log(`Skipped ${note.id} (contain muted words)`);
+				this.log(`Skipped ${note.id} (contain muted words or myself note)`);
 			}
 		}
 
