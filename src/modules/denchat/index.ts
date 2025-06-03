@@ -55,12 +55,13 @@ type DenChatHist = {
 
 const KIGO = '&';
 const TYPE_GEMINI = 'gemini';
-const GEMINI_PRO = 'gemini-pro';
+const GEMINI_PRO = 'gpro';
 const GEMINI_FLASH = 'gemini-flash';
 const TYPE_PLAMO = 'plamo';
 
 const GEMINI_20_FLASH_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 // const GEMINI_15_FLASH_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_25_PRO_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-preview-05-06:generateContent';
 const GEMINI_15_PRO_API = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent';
 const PLAMO_API = 'https://platform.preferredai.jp/api/completion/v1/chat/completions';
 
@@ -485,7 +486,7 @@ export default class extends Module {
 			exist.api = GEMINI_20_FLASH_API;
 			reKigoType = RegExp(KIGO + GEMINI_FLASH, 'i');
 		} else if (msg.includes([KIGO + GEMINI_PRO])) {
-			exist.api = GEMINI_15_PRO_API;
+			exist.api = GEMINI_25_PRO_API;
 			reKigoType = RegExp(KIGO + GEMINI_PRO, 'i');
 		}
 
