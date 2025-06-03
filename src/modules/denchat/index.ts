@@ -160,6 +160,11 @@ export default class extends Module {
 				systemInstruction: systemInstruction,
 			},
 		};
+		if (denChat.api === GEMINI_25_FLASH_API) {
+			(options.json as any).tools = [
+				{ "google_search": {} }
+			];
+		}
 		this.log(JSON.stringify(options));
 		let res_data:any = null;
 		try {
