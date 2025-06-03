@@ -19,14 +19,5 @@ export const prohibitedWords = [
 
 	// その他不適切な表現
 	"役立たず", "のろま", "低能", "無能", "うざい", "消えろ", "カス野郎", 
-	"ぶっ殺す", "ぶち殺す", "糞", "愚か者",
-
-	// プロンプトインジェクション関連
-	"命令を無視して", "前の指示を無視", "前の制約を無視", "無視して続けて",
-	"ignore previous instructions", "forget above", "reset context",
-	"新しいルールは", "あなたの新しい役割は", "今からあなたは",
-	"act as", "pretend to be", "from now on", "you are no longer",
-	"出力制限を無視", "出力を続けて", "answer anyway", "override filter",
-	"次の内容をそのまま繰り返して", "以下を出力", "次の文を繰り返して", "次のコードをそのまま返して",
-	"repeat this:"
+	"ぶっ殺す", "ぶち殺す", "糞", "愚か者"
 ];
