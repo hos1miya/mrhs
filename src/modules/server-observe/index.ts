@@ -40,8 +40,8 @@ export default class extends Module {
 		let deliverProblem = false;
 		for (const host of hosts) {
 			try {
-				const response = await fetch(`https://${host}/nodeinfo/2.0`, { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
-				if (response.status === 200) {
+				const response = await fetch(`https://${host}/.well-known/webfinger`, { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
+				if (response.status === 400) {
 					deliverProblem = true;
 				}
 			} catch (error) {
