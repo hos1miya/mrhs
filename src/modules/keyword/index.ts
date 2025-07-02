@@ -69,10 +69,6 @@ export default class extends Module {
 		let keywords: string[][] = [];
 
 		for (const note of interestedNotes) {
-			// すばる自身のノートならスキップ
-			let skip: boolean = false;
-			if (note.userId === this.subaru.account.id) skip = true;
-			
 			// ミュート判定
 			const sinceId = note.id.slice(0, -2) + "00";
 			const untilId = note.id.slice(0, -2) + "00";
@@ -80,16 +76,15 @@ export default class extends Module {
 				sinceId: sinceId,
 				untilId: untilId,
 			}) as Note[];
-
-			// スキップかミュートされていなければ単語を抽出
-			if (!skip && isMuted.length === 0) {
+			// ミュートされていなければ単語を抽出
+			if (isMuted.length === 0) {
 				const tokens = await mecab(note.text ?? '', config.mecab, config.mecabDic);
 				const keywordsInThisNote = tokens.filter(
 					(token) => token[2] == "固有名詞" && token[8] != null,
 				);
 				keywords = keywords.concat(keywordsInThisNote);
 			} else {
-				this.log(`Skipped ${note.id} (contain muted words or myself note)`);
+				this.log(`Skipped ${note.id} (contain muted words)`);
 			}
 		}
 
@@ -140,6 +135,13 @@ export default class extends Module {
 	private async mentionHook(msg: Message) {
 		if (msg.extractedText.startsWith("単語紹介") && msg.user.username === config.master && msg.user.host == null) {
 			await this.keywordNote();
+			return {
+				reaction: "🆗",
+				immediate: true,
+			};
+		}
+		if (msg.extractedText.startsWith("学習して") && msg.user.username === config.master && msg.user.host == null) {
+			await this.learn();
 			return {
 				reaction: "🆗",
 				immediate: true,
