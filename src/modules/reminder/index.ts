@@ -138,9 +138,9 @@ export default class extends Module {
 		
 		thing = words.join(" "); // 残りを thing に
 		
-		const minutesQuery = (time || "").match(/.*([0-9]+)分.*/);
-		const hoursQuery = (time || "").match(/.*([0-9]+)時間.*/);
-		const daysQuery = (time || "").match(/.*([0-9]+)日.*/);
+		const minutesQuery = (time || "").match(/([0-9]+)分/);
+		const hoursQuery = (time || "").match(/([0-9]+)時間/);
+		const daysQuery = (time || "").match(/([0-9]+)日/);
 		const minutes = minutesQuery ? parseInt(minutesQuery[1], 10) : 0;
 		const hours = hoursQuery ? parseInt(hoursQuery[1], 10) : 0;
 		const days = daysQuery ? parseInt(daysQuery[1], 10) : 0;
