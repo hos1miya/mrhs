@@ -75,7 +75,7 @@ export default class extends Module {
 			const isMuted = await this.subaru.api("i/get-word-muted-notes", {
 				sinceId: sinceId,
 				untilId: untilId,
-			}) as Note[];
+			}, true) as Note[];
 			// ミュートされていなければ単語を抽出
 			if (isMuted.length === 0) {
 				const tokens = await mecab(note.text ?? '', config.mecab, config.mecabDic);
