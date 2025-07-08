@@ -462,6 +462,11 @@ export default class extends Module {
 			const data = await this.subaru.api('notes/show', { noteId: choseNote.id });
 			targetedMessage = new Message(this.subaru, data);
 		}
+
+		// 2.5Flash使用
+		if (targetedMessage.text) {
+			targetedMessage.text += ' &gprev';
+		}
 		const result = await this.handleDenChat(current, targetedMessage);
 
 		if (result) {
