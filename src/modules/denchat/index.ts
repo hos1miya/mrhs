@@ -166,10 +166,16 @@ export default class extends Module {
 			];
 		}
 		this.log(JSON.stringify(options));
-		let res_data:any = null;
+		let res_data: any = null;
 		try {
-			res_data = await got.post(options,
-				{parseJson: (res: string) => JSON.parse(res)}).json();
+			const res_data = await got.post(options, {
+				retry: {
+					limit: 3,
+					statusCodes: [500, 503],
+					methods: ['POST'],
+				},
+				parseJson: (res: string) => JSON.parse(res),
+			}).json() as any;
 			this.log(JSON.stringify(res_data));
 			if (res_data.hasOwnProperty('candidates')) {
 				if (res_data.candidates.length > 0) {
@@ -185,10 +191,19 @@ export default class extends Module {
 					}
 				}
 			}
-		} catch (err: unknown) {
+		} catch (err: any) {
 			this.log('Error By Call Gemini');
-			if (err instanceof Error) {
-				this.log(`${err.name}\n${err.message}\n${err.stack}`);
+			if (err.response && err.response.body) {
+				try {
+					const body = JSON.parse(err.response.body);
+					const httpCode = body?.errorDetails?.httpCode ?? body?.error?.code ?? err.response.statusCode;
+					const errorMessage = body?.errorMessage ?? body?.error?.message ?? 'Unknown error';
+					this.log(`${httpCode}: ${errorMessage}`);
+				} catch (parseErr) {
+					this.log(`${err.response.statusCode}: Error log parse failed`);
+				}
+			} else {
+				this.log(`Request error: ${err.message}`);
 			}
 		}
 		return null;
@@ -561,7 +576,6 @@ export default class extends Module {
 		}
 
 		if (text == null) {
-			this.log('The result is invalid. It seems that tokens and other items need to be reviewed.')
 			msg.reply(serifs.denchat.error);
 			return false;
 		}
@@ -635,20 +649,29 @@ export default class extends Module {
 		denChat = {
 			question: question,
 			prompt: prompt,
-			api: GEMINI_20_FLASH_API,
+			api: GEMINI_25_FLASH_API,
 			key: config.geminiApiKey
 		};
 
 		// Gemini問い合わせ
 		text = await this.genTextByGemini(denChat);
 		if (text == null) {
-			this.log('The result is invalid. It seems that tokens and other items need to be reviewed.')
 			this.subaru.post({ text: serifs.denchat.error });
 			return false;
 		}
 	
 		this.log('Noting...');
-		this.subaru.post({ text: text });
+		this.subaru.post({ text: text });/*.then(post => {
+			this.log('Subscribe&Set Timer...');
+
+			// メンションをsubscribe
+			this.subscribeReply(post.id, post.id);
+
+			// タイマーセット
+			this.setTimeoutWithPersistence(TIMEOUT_TIME, {
+				id: post.id
+			});
+		});*/
 		return true;
 	}
 }

@@ -417,8 +417,8 @@ export default {
 	},
 
 	denchat: {
-		nothing: `APIキーが登録されてないみたいだよ。`,
-		error: `エラーが発生しているみたいだよ。`,
+		nothing: `LLMのAPIキーが登録されてないみたいだよ。`,
+		error: `LLMでエラーが発生しているみたいだよ。`,
 		post: (text) => `${text} #denchat`,
 	},
 

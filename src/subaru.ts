@@ -413,10 +413,13 @@ export default class すばる {
 
 	/**
 	 * APIを呼び出します
+	 * @param endpoint APIエンドポイント
+	 * @param param APIに渡すパラメータ(optional)
+	 * @param supressLog 呼び出し時のログ抑制(optional)
 	 */
 	@bindThis
-	public api(endpoint: string, param?: any) {
-		this.log(`API: ${endpoint}`);
+	public api(endpoint: string, param?: any, supressLog?: boolean) {
+		if(!supressLog) this.log(`API: ${endpoint}`);
 		return got
 			.post(`${config.apiUrl}/${endpoint}`, {
 				json: Object.assign(
