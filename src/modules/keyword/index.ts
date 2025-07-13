@@ -66,7 +66,7 @@ export default class extends Module {
 				(note.visibility === "public" || note.visibility === "home"),
 		);
 
-		let keywords: string[][] = [];
+		let keywords: { keyword: string[], noteId: string }[] = [];
 
 		for (const note of interestedNotes) {
 			// ミュート判定
@@ -82,7 +82,9 @@ export default class extends Module {
 				const keywordsInThisNote = tokens.filter(
 					(token) => token[2] == "固有名詞" && token[8] != null,
 				);
-				keywords = keywords.concat(keywordsInThisNote);
+				keywordsInThisNote.forEach(keyword => {
+					keywords.push({ keyword, noteId: note.id });
+				});
 			} else {
 				this.log(`Skipped ${note.id} (contain muted words)`);
 			}
@@ -91,9 +93,12 @@ export default class extends Module {
 		if (keywords.length === 0) return;
 
 		const rnd = Math.floor((1 - Math.sqrt(Math.random())) * keywords.length);
-		const keyword = keywords.sort((a, b) =>
-			a[0].length < b[0].length ? 1 : -1,
+		const picked = keywords.sort((a, b) =>
+			a.keyword[0].length < b.keyword[0].length ? 1 : -1,
 		)[rnd];
+
+		const keyword = picked.keyword;
+		const sourceNoteId = picked.noteId;
 
 		const exist = this.learnedKeywords.findOne({
 			keyword: keyword[0],
@@ -111,9 +116,11 @@ export default class extends Module {
 
 			text = serifs.keyword.learned(keyword[0], kanaToHira(keyword[8]));
 
-			// 学習元と思われるノートにふぁぼ
-			const learnedNote: Note[] = await this.subaru.api('notes/search', { limit: 1, query: keyword[0] }) as Note[];
-			await this.subaru.api('notes/reactions/create', { noteId: learnedNote[0].id, reaction: '📕' });
+			// 学習元ノートにリアクション
+			await this.subaru.api('notes/reactions/create', {
+				noteId: sourceNoteId,
+				reaction: '📕'
+			});
 		}
 
 		this.subaru.post({
