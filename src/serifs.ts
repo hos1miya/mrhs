@@ -449,6 +449,15 @@ export default {
 	hash: {
 		invalidDate: `日付形式が間違っているみたい。「20xx-mm-dd hh:mm」の形にしてくれるかな？`,
 	},
+
+	follow: {
+		requestReceived: (screenName, username) =>
+			`${screenName}(@${username})のことフォローしても大丈夫かな？`,
+		requestReceivedWithHost: (screenName, username, host) =>
+			`${screenName}(@${username}@${host})のことフォローしても大丈夫かな？`,
+		pleaseWaitForConfirm: `マスターに確認してみるから、少し待っててね。`,
+		okay: `了解だよ。`,
+	}
 };
 
 export function getSerif(variant: string | string[]): string {
