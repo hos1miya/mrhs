@@ -451,10 +451,11 @@ export default {
 	},
 
 	follow: {
-		requestReceived: (screenName, username) =>
-			`${screenName}(@${username})のことフォローしても大丈夫かな？`,
-		requestReceivedWithHost: (screenName, username, host) =>
-			`${screenName}(@${username}@${host})のことフォローしても大丈夫かな？`,
+		whoAreYou: `きみは誰？`,
+		requestReceived: (master, screenName, username) =>
+			`@${master} ${screenName}(@${username})のことフォローしても大丈夫かな？`,
+		requestReceivedWithHost: (master, screenName, username, host) =>
+			`@${master} ${screenName}(@${username}@${host})のことフォローしても大丈夫かな？`,
 		pleaseWaitForConfirm: `マスターに確認してみるから、少し待っててね。`,
 		okay: `了解だよ。`,
 	}

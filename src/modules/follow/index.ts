@@ -41,7 +41,7 @@ export default class extends Module {
 			this.log("Follow requested");
 		}
 
-		if (msg.text.includes("followreq clean") && msg.user.username === config.master) {
+		if (msg.text.includes("followreq clean") && msg.user.username === config.master && msg.user.host === null) {
 			this.pendingReqs.clear();
 			return {
 				reaction: "🚮",
@@ -88,13 +88,14 @@ export default class extends Module {
 			}
 
 			// masterへメッセージ送信
-			const master: any = await this.subaru.api('users/search-by-username-and-host', { username: config.master, host: null });
+			const master: any = await this.subaru.api('users/show', { username: config.master, host: null });
 			const notify = await this.subaru.post({
 				text: msg.user.host
-					? serifs.follow.requestReceivedWithHost(msg.user.name, msg.user.username, msg.user.host)
-					: serifs.follow.requestReceived(msg.user.name, msg.user.username),
+					? serifs.follow.requestReceivedWithHost(config.master, msg.user.name, msg.user.username, msg.user.host)
+					: serifs.follow.requestReceived(config.master, msg.user.name, msg.user.username),
 				visibility: 'specified',
-				visibleUserIds: master.id
+				visibleUserIds: [ master.id ],
+				noExtractMentions: true,
 			});
 
 			// フォロー可否の待ち受け
@@ -121,16 +122,16 @@ export default class extends Module {
 			};
 		}
 
-    	if (
-       		!msg.user.isFollowing &&
-       		(
+		if (
+			!msg.user.isFollowing &&
+			(
 				msg.user.host == null ||
-        		msg.user.host === '' ||
-        		this.shouldFollowUser(
-           			msg.user.host,
-           			allowedHosts,
-           			followExcludeInstances
-       			)
+				msg.user.host === '' ||
+				this.shouldFollowUser(
+					msg.user.host,
+					allowedHosts,
+					followExcludeInstances
+				)
 			)
 		) {
 			try {
@@ -146,7 +147,7 @@ export default class extends Module {
 				return false;
 			}
 		} else if (!msg.user.isFollowing) {
-			await msg.reply("きみは誰？");
+			await msg.reply(serifs.follow.whoAreYou);
 			return {
 				reaction: msg.friend.love >= 0 ? "hmm" : null,
 			};
@@ -174,7 +175,7 @@ export default class extends Module {
 		const cancel = msg.includes(["cancel", "キャンセル"]);
 
 		// マスターによる承認、拒否
-		if ((ok || ng) && msg.user.username === config.master) {
+		if ((ok || ng) && msg.user.username === config.master && msg.user.host === null) {
 			msg.reply(serifs.follow.okay);
 			// OKならフォロー処理
 			if (ok) {
@@ -192,7 +193,8 @@ export default class extends Module {
 		}
 
 		// userによるキャンセル
-		if (cancel && msg.user.username !== config.master) {
+		if (cancel && (msg.user.username !== config.master || msg.user.host !== null)) {
+			msg.reply(serifs.follow.okay);
 			this.unsubscribeReply(key);
 			this.pendingReqs.remove(request);
 			return;
