@@ -33,11 +33,20 @@ export default class extends Module {
 			!msg.text ||
 			!(msg.text.includes("フォロー") ||
 				msg.text.includes("フォロバ") ||
-				msg.text.includes("follow me"))
+				msg.text.includes("follow me") ||
+				msg.text.includes("followreq clean"))
 		) {
 			return false;
 		} else {
 			this.log("Follow requested");
+		}
+
+		if (msg.text.includes("followreq clean") && msg.user.username === config.master) {
+			this.pendingReqs.clear();
+			return {
+				reaction: "🚮",
+				immediate: true,
+			};
 		}
 		
 		this.log(`User host: ${msg.user.host}`);
