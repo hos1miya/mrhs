@@ -99,7 +99,7 @@ export default class extends Module {
 				visibleUserIds: [ master.id ],
 				noExtractMentions: true,
 			});
-			await this.subaru.api('messaging/messages/create', { userId: master.id, text: `https://${config.host}/notes/${notify.id}` })
+			await this.subaru.api('messaging/messages/create', { userId: master.id, text: `${config.host}/notes/${notify.id}` })
 
 			// フォロー可否の待ち受け
 			this.subscribeReply(request.id, notify.id, {
