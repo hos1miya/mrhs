@@ -54,7 +54,9 @@ export default class extends Module {
 		const allowedHosts = config.followAllowedHosts || [];
 		const followExcludeInstances = config.followExcludeInstances || [];
 
-		// フォローリクエスト転送処理
+		//
+		// フォローリクエスト転送有効の場合
+		//
 		if (config.transferFollowRequests && !msg.user.isFollowing) {
 			// 既にリクエストを受けているかチェック
 			const exists = this.pendingReqs.find({
@@ -97,6 +99,7 @@ export default class extends Module {
 				visibleUserIds: [ master.id ],
 				noExtractMentions: true,
 			});
+			await this.subaru.api('messaging/messages/create', { userId: master.id, text: `https://${config.host}/notes/${notify.id}` })
 
 			// フォロー可否の待ち受け
 			this.subscribeReply(request.id, notify.id, {
@@ -109,7 +112,7 @@ export default class extends Module {
 			});
 
 			// userへ返信
-			msg.reply(serifs.follow.pleaseWaitForConfirm);
+			msg.reply(serifs.follow.pleaseWaitForConfirm, { visibility: 'specified' });
 
 			// タイマーセット
 			this.setTimeoutWithPersistence(1000 * 60 * 60 * 24 * 7, {
@@ -122,6 +125,9 @@ export default class extends Module {
 			};
 		}
 
+		//
+		// フォローリクエスト転送無効の場合(サーバーWL/BL式)
+		//
 		if (
 			!msg.user.isFollowing &&
 			(
@@ -134,6 +140,7 @@ export default class extends Module {
 				)
 			)
 		) {
+			// ユーザーをフォローしておらず、ローカルor許可サーバーならフォロー試行
 			try {
 				await this.subaru.api("following/create", {
 					userId: msg.userId,
@@ -146,7 +153,7 @@ export default class extends Module {
 				else this.log(`Failed to follow user: unknown API error`);
 				return false;
 			}
-		} else if (!msg.user.isFollowing) {
+		} else if (!msg.user.isFollowing) {	// フォロー可能サーバーではない場合
 			await msg.reply(serifs.follow.whoAreYou);
 			return {
 				reaction: msg.friend.love >= 0 ? "hmm" : null,
@@ -176,7 +183,7 @@ export default class extends Module {
 
 		// マスターによる承認、拒否
 		if ((ok || ng) && msg.user.username === config.master && msg.user.host === null) {
-			msg.reply(serifs.follow.okay);
+			msg.reply(serifs.follow.okay, { visibility: 'specified' });
 			// OKならフォロー処理
 			if (ok) {
 				this.unsubscribeReply(key);
@@ -194,7 +201,7 @@ export default class extends Module {
 
 		// userによるキャンセル
 		if (cancel && (msg.user.username !== config.master || msg.user.host !== null)) {
-			msg.reply(serifs.follow.okay);
+			msg.reply(serifs.follow.okay, { visibility: 'specified' });
 			this.unsubscribeReply(key);
 			this.pendingReqs.remove(request);
 			return;
