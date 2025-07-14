@@ -116,10 +116,10 @@ export default class extends Module {
 			minute: '2-digit'
 		});
 		// 設定のプロンプトに加え、現在時刻を渡す
-		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "であり、これは回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
+		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "(日本時間)である。この日時は季節や時間帯など回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
 		// 名前を伝えておく
 		if (denChat.friendName != undefined) {
-			systemInstructionText += "なお、会話相手の名前は" + denChat.friendName + "とする。";
+			systemInstructionText += "なお、会話相手の名前は「" + denChat.friendName + "」とする。";
 		}
 		const systemInstruction: GeminiSystemInstruction = {role: 'system', parts: [{text: systemInstructionText}]};
 
@@ -291,9 +291,18 @@ export default class extends Module {
 
 	@bindThis
 	private async mentionHook(msg: Message) {
-		if (!msg.includes([this.name])) {
+		if (!msg.includes([this.name]) && !msg.includes(['/randomtalk'])) {
 			return false;
 		} else {
+			// RandomTalk手動トリガーの場合
+			if (msg.includes(['/randomtalk'])) {
+				await this.denchatRandomTalk();
+				return {
+					reaction: '🆗'
+				};
+			}
+
+			// 通常チャット開始
 			this.log('DenChat requested');
 			
 			const relation : any = await this.subaru?.api('users/relation', {
@@ -415,7 +424,7 @@ export default class extends Module {
 	}
 
 	@bindThis
-	private async denchatRandomTalk() {
+	private async denchatRandomTalk(force?: boolean) {
 		this.log('DenChat(randomtalk) started');
 		const tl : any = await this.subaru.api('notes/hybrid-timeline', {
 			limit: 30
@@ -451,7 +460,7 @@ export default class extends Module {
 		}
 
 		// 確率をクリアし、親愛度が正の値、かつ、Botでない場合のみ実行
-		if (Math.random() < this.randomTalkProbability) {
+		if (Math.random() < this.randomTalkProbability || force) {
 			this.log('DenChat(randomtalk) targeted: ' + choseNote.id);
 		} else {
 			this.log('DenChat(randomtalk) is end.');
@@ -479,8 +488,8 @@ export default class extends Module {
 		}
 
 		// 2.5Flash使用
-		if (targetedMessage.text) {
-			targetedMessage.text += ' &gprev';
+		if (targetedMessage.note.text) {
+			targetedMessage.note.text += ' &gprev';
 		}
 		const result = await this.handleDenChat(current, targetedMessage);
 
