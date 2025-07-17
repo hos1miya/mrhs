@@ -1,5 +1,7 @@
 // せりふ
 
+import emojiReact from "./modules/emoji-react/index.js";
+
 export default {
 	core: {
 		setNameOk: (name) => `OK。これからは${name}って呼ばせてもらうね。`,
@@ -458,6 +460,11 @@ export default {
 			`@${master} ${screenName}(@${username}@${host})のことフォローしても大丈夫かな？`,
 		pleaseWaitForConfirm: `マスターに確認してみるから、少し待っててね。`,
 		okay: `了解だよ。`,
+	},
+
+	emojiReact: {
+		emojiReactIsOn: `絵文字リアクションをONにしたよ。`,
+		emojiReactIsOff: `絵文字リアクションをOFFにしたよ。`,
 	}
 };
 

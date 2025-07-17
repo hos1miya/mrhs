@@ -1,19 +1,29 @@
 import { bindThis } from "@/decorators.js";
+import loki from "lokijs";
 import { parse } from "twemoji-parser";
-
 import type { Note } from "@/misskey/note.js";
 import Module from "@/module.js";
 import Stream from "@/stream.js";
 import includes from "@/utils/includes.js";
 import { sleep } from "@/utils/sleep.js";
+import serifs from "@/serifs.js";
 
 export default class extends Module {
 	public readonly name = "emoji-react";
 
-	private htl: ReturnType<Stream["useSharedConnection"]>;
+	private htl!: ReturnType<Stream["useSharedConnection"]>;
+
+		private reationFlag!: loki.Collection<{
+			id: string;
+			enabled: boolean;
+			updatedAt: number;
+		}>;
 
 	@bindThis
 	public install() {
+		this.reationFlag = this.subaru.getCollection("reactionFlag", {
+			indices: ["userId"],
+		});
 		this.htl = this.subaru.connection.useSharedConnection("homeTimeline");
 		this.htl.on("note", this.onNote);
 
@@ -36,6 +46,41 @@ export default class extends Module {
 				reaction: reaction,
 			});
 		};
+
+		const status = this.reationFlag.findOne({
+			id: note.userId,
+		});
+
+		// reaction toggle
+		if (note.text.startsWith('/subaru emojireact')) {
+			if (status) {
+				status.enabled = !status.enabled;
+				status.updatedAt = Date.now();
+				this.reationFlag.update(status);
+				this.subaru.api("notes/create", {
+					replyId: note.id,
+					text: status.enabled ? serifs.emojiReact.emojiReactIsOn : serifs.emojiReact.emojiReactIsOff,
+					visibility: 'specified',
+				});
+			}
+			else {
+				this.reationFlag.insertOne({
+					id: note.userId,
+					enabled: false,
+					updatedAt: Date.now(),
+				});
+				this.subaru.api("notes/create", {
+					replyId: note.id,
+					text: serifs.emojiReact.emojiReactIsOff,
+					visibility: 'specified',
+				});
+			}
+			return react("🆗");
+		}
+
+		if (status && status.enabled === false) {
+			return;
+		}
 
 		const customEmojis = note.text.match(/:([^\n:]+?):/g);
 		if (customEmojis) {
