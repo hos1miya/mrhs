@@ -311,7 +311,7 @@ export default class extends Module {
 			// this.log('Relation data:' + JSON.stringify(relation));
 
 			if (relation.isFollowing !== true) {
-				this.log('The user is not following me:' + msg.userId);
+				this.log('The user is not followed by me:' + msg.userId);
 				msg.reply('denchatへのアクセスが拒否されました。(権限がありません)');
 				return false;
 			}
@@ -400,6 +400,16 @@ export default class extends Module {
 			return false;
 		}
 
+		const relation : any = await this.subaru?.api('users/relation', {
+			userId: msg.userId,
+		});
+		// this.log('Relation data:' + JSON.stringify(relation));
+		if (relation.isFollowing !== true) {
+			this.log('The user is not followed by me:' + msg.userId);
+			msg.reply('denchatへのアクセスが拒否されました。(権限がありません)');
+			return false;
+		}
+
 		// 見つかった場合はunsubscribe&removeし、回答。今回のでsubscribe,insert,timeout設定
 		this.log('unsubscribeReply & remove.');
 		this.log(exist.type + ':' + exist.postId);
@@ -468,10 +478,10 @@ export default class extends Module {
 		}
 		const friend: Friend | null = this.subaru.lookupFriend(choseNote.userId);
 		if (friend == null || friend.love < 0) {
-			this.log('DenChat(randomtalk) end.Because there was not enough affection.');
+			this.log('DenChat(randomtalk) end. Because there was not enough affection.');
 			return false;
 		} else if (choseNote.user.isBot) {
-			this.log('DenChat(randomtalk) end.Because message author is bot.');
+			this.log('DenChat(randomtalk) end. Because message author is bot.');
 			return false;
 		}
 
@@ -670,17 +680,24 @@ export default class extends Module {
 		}
 	
 		this.log('Noting...');
-		this.subaru.post({ text: text });/*.then(post => {
-			this.log('Subscribe&Set Timer...');
+		this.subaru.post({ text: text }).then(post => {
+			const current: DenChatHist = {
+				postId: post.id,
+				createdAt: Date.now(),
+				type: TYPE_GEMINI,
+				api: denChat.api,
+				history: [
+					{ role: 'user', content: question },
+					{ role: 'model', content: text }
+				]
+			};
 
-			// メンションをsubscribe
+			this.denchatHist.insertOne(current);
 			this.subscribeReply(post.id, post.id);
-
-			// タイマーセット
 			this.setTimeoutWithPersistence(TIMEOUT_TIME, {
 				id: post.id
 			});
-		});*/
+		});
 		return true;
 	}
 }
