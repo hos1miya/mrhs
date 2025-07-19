@@ -15,6 +15,8 @@ type DenChat = {
 	key: string;
 	history?: { role: string; content: string }[];
 	friendName?: string;
+	aboutFriend?: string;
+	visibility?: string;
 };
 type base64File = {
 	type: string;
@@ -53,6 +55,12 @@ type DenChatHist = {
 	friendName?: string;
 };
 
+type DenChatUser = {
+	id: string;
+	updatedAt: number;
+	aboutFriend: string;
+};
+
 const KIGO = '&';
 const TYPE_GEMINI = 'gemini';
 const GEMINI_PREVIEW = 'gprev';
@@ -70,6 +78,7 @@ const RANDOMTALK_DEFAULT_INTERVAL = 1000 * 60 * 60 * 12;// デフォルトのran
 export default class extends Module {
 	public readonly name = 'denchat';
 	private denchatHist!: loki.Collection<DenChatHist>;
+	private denchatUser!: loki.Collection<DenChatUser>;
 	private randomTalkProbability: number = RANDOMTALK_DEFAULT_PROBABILITY;
 	private randomTalkIntervalMinutes: number = RANDOMTALK_DEFAULT_INTERVAL;
 
@@ -77,6 +86,10 @@ export default class extends Module {
 	public install() {
 		this.denchatHist = this.subaru.getCollection('denchatHist', {
 			indices: ['postId']
+		});
+
+		this.denchatUser = this.subaru.getCollection('denchatUser', {
+			indices: ['userId']
 		});
 
 		// 確率は設定されていればそちらを採用(設定がなければデフォルトを採用)
@@ -119,7 +132,10 @@ export default class extends Module {
 		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "(日本時間)である。この日時は季節や時間帯など回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
 		// 名前を伝えておく
 		if (denChat.friendName != undefined) {
-			systemInstructionText += "なお、会話相手の名前は「" + denChat.friendName + "」とする。";
+			systemInstructionText += "なお、会話相手の名前は「" + denChat.friendName + "」とする。現時点でのユーザーの特徴は「" + denChat.aboutFriend + "」です。";
+		}
+		if (denChat.visibility && denChat.visibility !== 'specified') {
+			systemInstructionText += "文章の最後に、現時点での会話相手の特徴や今回の会話内容を踏まえて特徴をアップデートし、<about>タグで囲う形で追記すること。特徴は長くても140文字程度に抑えてください。";
 		}
 		const systemInstruction: GeminiSystemInstruction = {role: 'system', parts: [{text: systemInstructionText}]};
 
@@ -546,6 +562,10 @@ export default class extends Module {
 			this.log("msg.user.username:" + msg.user.username);
 		}
 
+		const user = this.denchatUser.findOne({
+			id: msg.userId,
+		});
+
 		const question = extractedText
 							.replace(reName, '')
 							.replace(reKigoType, '')
@@ -564,7 +584,9 @@ export default class extends Module {
 					api: GEMINI_20_FLASH_API,
 					key: config.geminiApiKey,
 					history: exist.history,
-					friendName: friendName
+					friendName: friendName,
+					aboutFriend: user ? user.aboutFriend : '現時点ではまだ不明',
+					visibility: msg.visibility
 				};
 				if (exist.api) {
 					denChat.api = exist.api
@@ -598,6 +620,23 @@ export default class extends Module {
 			msg.reply(serifs.denchat.error);
 			return false;
 		}
+
+		// ユーザーの特徴があれば保存して返信内容から除外
+		const match = text.match(/<about>(.*?)<\/about>/s);
+		const about = match ? match[1] : null;
+		if (user && about) {
+			user.aboutFriend = about;
+			user.updatedAt = Date.now();
+			this.denchatUser.update(user);
+		}
+		else if (about) {
+			this.denchatUser.insertOne({
+				id: msg.userId,
+				aboutFriend: about,
+				updatedAt: Date.now(),
+			});
+		}
+		text = text.replace(/<about>.*?<\/about>/s, '').trim();
 
 		this.log('Replying...');
 		// 公開範囲がパブリックであればホームに変更
