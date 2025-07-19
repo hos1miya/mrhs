@@ -625,11 +625,13 @@ export default class extends Module {
 		const match = text.match(/<about>(.*?)<\/about>/s);
 		const about = match ? match[1] : null;
 		if (user && about) {
+			this.log(`About updated: 「${about}」`);
 			user.aboutFriend = about;
 			user.updatedAt = Date.now();
 			this.denchatUser.update(user);
 		}
 		else if (about) {
+			this.log(`About updated: 「${about}」`);
 			this.denchatUser.insertOne({
 				id: msg.userId,
 				aboutFriend: about,
