@@ -267,33 +267,26 @@ export default class extends Module {
 	}
 
 	@bindThis
-	private async note2base64File(notesId: string) {
-		const noteData : any = await this.subaru.api('notes/show', { noteId: notesId });
-		let files:base64File[] = [];
-		let fileType: string | undefined, filelUrl: string | undefined;
-		if (noteData !== null && noteData.hasOwnProperty('files')) {
-			for (let i = 0; i < noteData.files.length; i++) {
-				if (noteData.files[i].hasOwnProperty('type')) {
-					fileType = noteData.files[i].type;
-					if (noteData.files[i].hasOwnProperty('name')) {
-						// 拡張子で挙動を変えようと思ったが、text/plainしかMissingKeyで変になってGemini対応してるものがない？
-						// let extention = noteData.files[i].name.split('.').pop();
-						if (fileType === 'application/octet-stream' || fileType === 'application/xml') {
-							fileType = 'text/plain';
-						}
-					}
+	private async note2base64File(notesId: string): Promise<base64File[]> {
+		const collectedFiles: base64File[] = [];
+
+		const collectFilesFromNote = async (note: any) => {
+			if (!note || !note.files) return;
+
+			for (const file of note.files) {
+				let fileType = file.type;
+				let fileUrl = file.thumbnailUrl || file.url;
+
+				// Geminiに渡すための形式調整
+				if (fileType === 'application/octet-stream' || fileType === 'application/xml') {
+					fileType = 'text/plain';
 				}
-				if (noteData.files[i].hasOwnProperty('thumbnailUrl') && noteData.files[i].thumbnailUrl) {
-					filelUrl = noteData.files[i].thumbnailUrl;
-				} else if (noteData.files[i].hasOwnProperty('url') && noteData.files[i].url) {
-					filelUrl = noteData.files[i].url;
-				}
-				if (fileType !== undefined && filelUrl !== undefined) {
+
+				if (fileType && fileUrl) {
 					try {
-						this.log('filelUrl:'+filelUrl);
-						const file = await urlToBase64(filelUrl);
-						const base64file:base64File = {type: fileType, base64: file};
-						files.push(base64file);
+						this.log('fileUrl:' + fileUrl);
+						const base64 = await urlToBase64(fileUrl);
+						collectedFiles.push({ type: fileType, base64 });
 					} catch (err: unknown) {
 						if (err instanceof Error) {
 							this.log(`${err.name}\n${err.message}\n${err.stack}`);
@@ -301,8 +294,24 @@ export default class extends Module {
 					}
 				}
 			}
+		};
+
+		const noteData: any = await this.subaru.api('notes/show', { noteId: notesId });
+
+		// 本体
+		await collectFilesFromNote(noteData);
+
+		// リプライ先（replyId が存在して、reply が埋め込まれている場合）
+		if (noteData.reply) {
+			await collectFilesFromNote(noteData.reply);
 		}
-		return files;
+
+		// リノート元（renoteId が存在して、renote が埋め込まれている場合）
+		if (noteData.renote) {
+			await collectFilesFromNote(noteData.renote);
+		}
+
+		return collectedFiles;
 	}
 
 	@bindThis
