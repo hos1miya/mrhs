@@ -200,6 +200,9 @@ export default class extends Module {
 							if (res_data.candidates[0].content.parts.length > 0) {
 								if (res_data.candidates[0].content.parts[0].hasOwnProperty('text')) {
 									const responseText = res_data.candidates[0].content.parts[0].text;
+									if (responseText.startsWith('The search results') || responseText.startsWith('思考プロセス')) {
+										throw new Error('Invalid text generated(may contain prompts)');
+									}
 									return responseText;
 								}
 							}
