@@ -699,6 +699,11 @@ export default class extends Module {
 		}
 	}
 
+	//
+	// 以下、外部向け関数
+	//
+
+	// keywordモジュール用 指定のキーワードについて生成
 	@bindThis
 	public async noteAboutKeyword(keyword: string): Promise<boolean> {
 		this.log('KeywordNote started');
@@ -752,6 +757,45 @@ export default class extends Module {
 			});
 		});
 		return true;
+	}
+
+	// 天気情報 エリアと時間帯指定
+	public async weather(area: string, time: string): Promise<boolean> {
+		this.log('WeatherNote started');
+
+		let text: string, denChat: DenChat;
+		let prompt: string = '';
+		if (config.prompt) {
+			prompt = config.prompt;
+		}
+
+		let question = `タイムラインの「マスター」に向けて、${area}の${time}の最高気温と最低気温、時間帯ごとの空模様、特に注意が必要なポイントについてまとめた天気情報を伝えてね。最初の文章は、今の時間に合わせたあいさつにしてね。`;
+		if (question == undefined || question.length == 0) return false;
+		question = question.trim();
+
+		// geminiの場合、APIキーが必須
+		if (!config.geminiApiKey) {
+			return false;
+		}
+
+		denChat = {
+			question: question,
+			prompt: prompt,
+			api: GEMINI_25_FLASH_API,
+			key: config.geminiApiKey
+		};
+
+		// Gemini問い合わせ
+		text = await this.genTextByGemini(denChat);
+		if (text == null) {
+			this.subaru.post({ text: serifs.denchat.error });
+			return false;
+		}
+	
+		this.log('Noting...');
+		this.subaru.post({ text: text })
+		return true;
+
 	}
 }
 

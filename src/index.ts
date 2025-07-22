@@ -42,6 +42,7 @@ import CheckCustomEmojisModule from "./modules/check-custom-emojis/index.js";
 import DenChatModule from "./modules/denchat/index.js";
 import ServerObserveModule from "./modules/server-observe/index.js";
 import HashModule from "./modules/hash/index.js";
+import WeatherModule from "./modules/weather/index.js";
 
 console.log(" ____    _____   _   _   _____   _____    __         __  ");
 console.log("|    \\  | ____| | \\ | | |  ___| |  _  |  / _| _   _ |_ \\ ");
@@ -131,6 +132,7 @@ promiseRetry(
 			new NotingModule(),
 			//new EarthQuakeWarningModule(),
 			new ServerObserveModule(),
+			new WeatherModule(),
 		]);
 	})
 	.catch((e) => {

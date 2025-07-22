@@ -29,6 +29,9 @@ type Config = {
 	keywordNoteEnabled?: boolean;
 	keywordNoteIntervalMinutes?: string;
 	transferFollowRequests?: boolean;
+	weatherArea?: string;
+	weatherTimeMorning?: string;
+	weatherTimeNight?: string;
 };
 
 // import config from '../config.json' assert { type: 'json' };

@@ -56,7 +56,11 @@ Diceの改善(文章に埋め込まれた結果を返すように)\
   "mazeEnable": true,
   "pollEnable": true,
   "keywordNoteEnabled": true,
-  "keywordNoteIntervalMinutes": true
+  "keywordNoteIntervalMinutes": true,
+  "transferFollowRequests": "フォローリクエストをマスター経由で承認するか(オプション、デフォルト: false)",
+  "weatherArea": "天気情報のエリア(オプション、デフォルト: 東京)",
+  "weatherTimeMorning": "朝の天気(今日の天気)の時間(オプション、デフォルト: 7)",
+  "weatherTimeNight": "夜の天気(明日の天気)の時間(オプション、デフォルト: 21)"
 }
 ```
 
@@ -95,7 +99,11 @@ Diceの改善(文章に埋め込まれた結果を返すように)\
   "mazeEnable": true,
   "pollEnable": true,
   "keywordNoteEnabled": true,
-  "keywordNoteIntervalMinutes": true
+  "keywordNoteIntervalMinutes": true,
+  "transferFollowRequests": "フォローリクエストをマスター経由で承認するか(オプション、デフォルト: false)",
+  "weatherArea": "天気情報のエリア(オプション、デフォルト: 東京)",
+  "weatherTimeMorning": "朝の天気(今日の天気)の時間(オプション、デフォルト: 7)",
+  "weatherTimeNight": "夜の天気(明日の天気)の時間(オプション、デフォルト: 21)"
 }
 ```
 
