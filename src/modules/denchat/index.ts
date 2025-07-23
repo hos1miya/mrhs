@@ -633,24 +633,37 @@ export default class extends Module {
 			return false;
 		}
 
+		let about: string | null = null;
+
+		if (text.endsWith('</about>')) {
+			const match = text.match(/<about>(.*?)<\/about>$/s);
+			if (match) {
+				about = match[1];
+				text = text.replace(/<about>.*?<\/about>$/s, '').trim();
+			}
+		} else {
+			const match = text.match(/<about>(.*)$/s);
+			if (match) {
+				about = match[1];
+				text = text.replace(/<about>.*$/s, '').trim();
+			}
+		}
+
 		// ユーザーの特徴があれば保存して返信内容から除外
-		const match = text.match(/<about>(.*?)<\/about>/s);
-		const about = match ? match[1] : null;
-		if (user && about) {
+		if (about) {
 			this.log(`About updated: 「${about}」`);
-			user.aboutFriend = about;
-			user.updatedAt = Date.now();
-			this.denchatUser.update(user);
+			if (user) {
+				user.aboutFriend = about;
+				user.updatedAt = Date.now();
+				this.denchatUser.update(user);
+			} else {
+				this.denchatUser.insertOne({
+					id: msg.userId,
+					aboutFriend: about,
+					updatedAt: Date.now(),
+				});
+			}
 		}
-		else if (about) {
-			this.log(`About updated: 「${about}」`);
-			this.denchatUser.insertOne({
-				id: msg.userId,
-				aboutFriend: about,
-				updatedAt: Date.now(),
-			});
-		}
-		text = text.replace(/<about>.*?<\/about>/s, '').trim();
 
 		this.log('Replying...');
 		// 公開範囲がパブリックであればホームに変更
