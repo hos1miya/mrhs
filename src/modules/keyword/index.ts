@@ -68,26 +68,22 @@ export default class extends Module {
 
 		let keywords: { keyword: string[], noteId: string }[] = [];
 
+		// ミュートされている単語をfetch
+		const rawAcctData = await this.subaru.api('i', {});
+		const currentMutedWords = ((rawAcctData as { mutedWords: string[][] })?.mutedWords ?? []).flat();
+		const mutedSet = new Set(currentMutedWords);
+
+		// 単語の抽出(ミュートワードは除外)
 		for (const note of interestedNotes) {
-			// ミュート判定
-			const sinceId = note.id.slice(0, -2) + "00";
-			const untilId = note.id.slice(0, -2) + "00";
-			const isMuted = await this.subaru.api("i/get-word-muted-notes", {
-				sinceId: sinceId,
-				untilId: untilId,
-			}, true) as Note[];
-			// ミュートされていなければ単語を抽出
-			if (isMuted.length === 0) {
-				const tokens = await mecab(note.text ?? '', config.mecab, config.mecabDic);
-				const keywordsInThisNote = tokens.filter(
-					(token) => token[2] == "固有名詞" && token[8] != null,
-				);
-				keywordsInThisNote.forEach(keyword => {
+			const tokens = await mecab(note.text ?? '', config.mecab, config.mecabDic);
+			const keywordsInThisNote = tokens.filter(
+				(token) => token[2] == "固有名詞" && token[8] != null,
+			);
+			keywordsInThisNote.forEach(keyword => {
+				if (!mutedSet.has(keyword[0])) {
 					keywords.push({ keyword, noteId: note.id });
-				});
-			} else {
-				this.log(`Skipped ${note.id} (contain muted words)`);
-			}
+				}
+			});
 		}
 
 		if (keywords.length === 0) return;
