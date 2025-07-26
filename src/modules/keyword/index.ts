@@ -182,9 +182,8 @@ export default class extends Module {
 		const updatedMutedWords = Array.from(new Set([...currentMutedWords, match[1]])).map(word => [word]);
 		await this.subaru.api('i/update', { mutedWords: updatedMutedWords });
 
-		// 直近の対象ノートをミュート
-		const unsafeNote: Note[] = await this.subaru.api('notes/search', { limit: 1, query: match[1], untilId: originNote.id }) as Note[];
-		await this.subaru.api('notes/mutes/create', { noteId: unsafeNote[0].id });
+		// 学習した記録のノートを削除
+		await this.subaru.api("notes/delete", { noteId: msg.replyId });
 
 		return {
 			reaction: "🆗",
