@@ -102,7 +102,7 @@ export default class extends Module {
 
 		this.lastDeliverProblem = false;
 		this.lastRebootCanceled = Date.now();
-		msg.reply(serifs.serverObserve.rebootCanceled, { visibility: msg.visibility });
+		msg.reply(serifs.serverObserve.rebootCanceled);
 
 		this.unsubscribeReply(null);
 

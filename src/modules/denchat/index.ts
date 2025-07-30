@@ -598,7 +598,7 @@ export default class extends Module {
 					history: exist.history,
 					friendName: friendName,
 					aboutFriend: user ? user.aboutFriend : '現時点ではまだ不明',
-					visibility: msg.visibility
+					visibility: msg.visibility,
 				};
 				if (exist.api) {
 					denChat.api = exist.api

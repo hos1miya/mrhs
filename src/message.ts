@@ -97,7 +97,7 @@ export default class Message {
 			fileIds: opts?.file ? [opts?.file.id] : undefined,
 			cw: opts?.cw,
 			renoteId: opts?.renote,
-			visibility: opts?.visibility ? opts?.visibility : 'home',
+			visibility: opts?.visibility ? opts?.visibility : this.note.visibility,
 			visibleUserIds: visibleIds ? visibleIds : undefined,
 		});
 	}

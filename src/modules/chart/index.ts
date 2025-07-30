@@ -164,7 +164,7 @@ export default class extends Module {
 		});
 
 		this.log("Replying...");
-		msg.reply(serifs.chart.foryou, { file });
+		msg.reply(serifs.chart.foryou, { file, visibility: msg.visibility });
 
 		return {
 			reaction: "like",

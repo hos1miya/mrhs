@@ -3,6 +3,7 @@ import Module from "@/module.js";
 import Message from "@/message.js";
 import serifs from "@/serifs.js";
 import { safeForInterpolate } from "@/utils/safe-for-interpolate.js";
+import config from "@/config.js";
 
 const titles = ["さん", "くん", "君", "ちゃん", "様", "先生"];
 
@@ -39,7 +40,7 @@ export default class extends Module {
 
 		const code = msg.friend.generateTransferCode();
 
-		msg.reply(serifs.core.transferCode(code));
+		msg.reply(serifs.core.transferCode(code), { visibility: 'specified' });
 
 		return true;
 	}
@@ -67,7 +68,7 @@ export default class extends Module {
 	private setName(msg: Message): boolean {
 		if (!msg.text) return false;
 		if (!msg.text.includes('って呼んで')) return false;
-		if (msg.text.startsWith('って呼んで')) return false;
+		if (msg.extractedText.startsWith('って呼んで')) return false;
 		this.log("CoreModule SetName requested");
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -103,6 +104,8 @@ export default class extends Module {
 	private modules(msg: Message): boolean {
 		if (!msg.text) return false;
 		if (!msg.or(["modules"])) return false;
+		if (msg.user.username !== config.master ||
+				msg.user.host !== null) return false;
 		this.log("CoreModule Modules requested");
 
 		let text = "```\n";
@@ -115,6 +118,7 @@ export default class extends Module {
 
 		msg.reply(text, {
 			immediate: true,
+			visibility: "specified",
 		});
 
 		return true;
