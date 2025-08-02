@@ -114,7 +114,6 @@ promiseRetry(
 			new FortuneModule(),				// 占い
 			new GuessingGameModule(),		// 数当て
 			new KazutoriModule(),				// 数取り
-			//new ReversiModule(),			// リバーシ
 			new TimerModule(),					// タイマー(～分・～時間)
 			new DiceModule(),						// サイコロ(～d～)
 			new MazeModule(),						// 迷路
@@ -130,7 +129,6 @@ promiseRetry(
 			new ValentineModule(),
 			new SleepReportModule(),
 			new NotingModule(),
-			//new EarthQuakeWarningModule(),
 			new ServerObserveModule(),
 			new WeatherModule(),
 		]);
