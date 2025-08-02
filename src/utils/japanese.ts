@@ -120,6 +120,7 @@ export function zenkakuToHankaku(str: string): string {
 	const reg = new RegExp("(" + kanaMap.map((x) => x[0]).join("|") + ")", "g");
 
 	return str
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		.replace(reg, (match) => kanaMap.find((x) => x[0] == match)![1])
 		.replace(/゛/g, "ﾞ")
 		.replace(/゜/g, "ﾟ");
@@ -134,6 +135,7 @@ export function hankakuToZenkaku(str: string): string {
 	const reg = new RegExp("(" + kanaMap.map((x) => x[1]).join("|") + ")", "g");
 
 	return str
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		.replace(reg, (match) => kanaMap.find((x) => x[1] == match)![0])
 		.replace(/ﾞ/g, "゛")
 		.replace(/ﾟ/g, "゜");

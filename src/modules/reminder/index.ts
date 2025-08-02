@@ -115,7 +115,7 @@ export default class extends Module {
 								`・${remind.thing ? remind.thing : getQuoteLink(remind.quoteId)} \$[unixtime ${remind.expiredAt / 1000}]`,
 						)
 						.join("\n"),
-				{ visibility : "specified" },
+				{ visibility: "specified" },
 			);
 			return true;
 		}
@@ -156,7 +156,7 @@ export default class extends Module {
 			(thing === "" && msg.quoteId == null) ||
 			times > 5184000000
 		) {
-			msg.reply(serifs.reminder.invalid, { visibility : msg.visibility });
+			msg.reply(serifs.reminder.invalid);
 			return {
 				reaction: "🆖",
 				immediate: true,
@@ -174,21 +174,29 @@ export default class extends Module {
 			visibility: msg.visibility,
 		});
 
+		if (!remind) {
+			msg.reply(serifs.general.unknownError);
+			return {
+				reaction: "🆖",
+				immediate: true,
+			};
+		}
+
 		// メンションをsubscribe
-		this.subscribeReply(remind!.id, msg.id, {
-			id: remind!.id,
+		this.subscribeReply(remind.id, msg.id, {
+			id: remind.id,
 		});
 
 		if (msg.quoteId) {
 			// 引用元をsubscribe
-			this.subscribeReply(remind!.id, msg.quoteId, {
-				id: remind!.id,
+			this.subscribeReply(remind.id, msg.quoteId, {
+				id: remind.id,
 			});
 		}
 
 		// タイマーセット
 		this.setTimeoutWithPersistence(NOTIFY_INTERVAL > times ? times + 100 : NOTIFY_INTERVAL, {
-			id: remind!.id,
+			id: remind.id,
 		});
 
 		return {
@@ -222,11 +230,10 @@ export default class extends Module {
 				done
 					? getSerif(serifs.reminder.done(msg.friend.name))
 					: serifs.reminder.cancel,
-				{ visibility : msg.visibility },
 			);
 			return;
 		} else if (isOneself === false) {
-			msg.reply(serifs.reminder.doneFromInvalidUser, { visibility : "home" });
+			msg.reply(serifs.reminder.doneFromInvalidUser, { visibility: "home" });
 			return;
 		} else {
 			return false;
@@ -258,7 +265,7 @@ export default class extends Module {
 						? undefined
 						: remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
 					text: acct(friend.doc.user) + " " + serifs.reminder.expired,
-					visibility : remind.visibility ? remind.visibility : 'home',
+					visibility: remind.visibility ?? 'home',
 					visibleUserIds: visibleIds ? visibleIds : undefined,
 				});
 			} finally {
@@ -281,10 +288,10 @@ export default class extends Module {
 					? undefined
 					: remind.thing == null && remind.quoteId ? remind.quoteId : remind.id,
 				text: acct(friend.doc.user) + " " + serifs.reminder.notify(friend.name),
-				visibility : remind.visibility ? remind.visibility : 'home',
+				visibility: remind.visibility ?? 'home',
 				visibleUserIds: visibleIds ? visibleIds : undefined,
 			});
-		} catch (err) {
+		} catch (err: any) {
 			// renote対象が消されていたらリマインダー解除
 			if (err.statusCode === 400) {
 				this.unsubscribeReply(

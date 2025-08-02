@@ -127,8 +127,8 @@ export default class Stream extends EventEmitter {
 			}
 
 			for (const c of connections.filter((c) => c != null)) {
-				c!.emit(body.type, body.body);
-				c!.emit("*", { type: body.type, body: body.body });
+				c.emit(body.type, body.body);
+				c.emit("*", { type: body.type, body: body.body });
 			}
 		} else {
 			this.emit(type, body);
@@ -178,7 +178,7 @@ class Pool {
 	public id: string;
 	protected stream: Stream;
 	private users = 0;
-	private disposeTimerId: any;
+	private disposeTimerId!: NodeJS.Timeout | null;
 	private isConnected = false;
 
 	constructor(stream: Stream, channel: string) {

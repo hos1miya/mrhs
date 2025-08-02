@@ -66,7 +66,7 @@ export default class Message {
 				userId: this.userId,
 			})
 			.then((user) => {
-				this.friend.updateUser(user);
+				this.friend.updateUser(user as User);
 			});
 	}
 

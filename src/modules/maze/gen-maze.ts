@@ -233,7 +233,7 @@ export function genMaze(seed, complexity?) {
 			dir = dirs[rand(dirs.length)];
 		}
 
-		maze[x][y] = cellVariants[maze[x][y]].digg[dir]!;
+		maze[x][y] = cellVariants[maze[x][y]].digg[dir] ?? 'void';
 
 		if (dir === "top") {
 			maze[x][y - 1] = maze[x][y - 1] === "empty" ? "bottom" : "cross";

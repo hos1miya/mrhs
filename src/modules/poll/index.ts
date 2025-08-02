@@ -159,9 +159,11 @@ export default class extends Module {
 
 	@bindThis
 	private async timeoutCallback({ title, noteId }) {
-		const note: Note = await this.subaru.api("notes/show", { noteId });
+		const note: Note = await this.subaru.api("notes/show", { noteId }) as Note;
 
-		const choices = note.poll!.choices;
+		if (!note || !note.poll) return;
+
+		const choices = note.poll.choices;
 
 		let mostVotedChoice;
 

@@ -4,7 +4,7 @@ import すばる, { InstallerResult } from "@/subaru.js";
 export default abstract class Module {
 	public abstract readonly name: string;
 
-	protected subaru: すばる;
+	protected subaru!: すばる;
 	private doc: any;
 
 	public init(subaru: すばる) {

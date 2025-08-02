@@ -184,7 +184,7 @@ export default class extends Module {
 		this.log(JSON.stringify(options));
 		let res_data: any = null;
 		try {
-			const res_data = await got.post(options, {
+			const res_data = await got.post(JSON.stringify(options), {
 				retry: {
 					limit: 3,
 					statusCodes: [500, 503],
@@ -248,7 +248,7 @@ export default class extends Module {
 		this.log(JSON.stringify(options));
 		let res_data:any = null;
 		try {
-			res_data = await got.post(options,
+			res_data = await got.post(JSON.stringify(options),
 				{parseJson: (res: string) => JSON.parse(res)}).json();
 			this.log(JSON.stringify(res_data));
 			if (res_data.hasOwnProperty('choices')) {
@@ -667,7 +667,7 @@ export default class extends Module {
 
 		this.log('Replying...');
 		// 公開範囲がパブリックであればホームに変更
-		msg.reply(serifs.denchat.post(text), { visibility: msg.visibility !== 'public' ? msg.visibility : 'home' }).then(reply => {
+		msg.reply(serifs.denchat.post(text), { visibility: msg.visibility !== 'public' ? msg.visibility: 'home' }).then(reply => {
 			// 履歴に登録
 			if (!exist.history) {
 				exist.history = [];

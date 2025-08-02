@@ -3,6 +3,10 @@
 import emojiReact from "./modules/emoji-react/index.js";
 
 export default {
+	general: {
+		unknownError: "不明なエラーが発生したみたい。また後で試してね。",
+	},
+
 	core: {
 		setNameOk: (name) => `OK。これからは${name}って呼ばせてもらうね。`,
 

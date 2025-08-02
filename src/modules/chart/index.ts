@@ -6,6 +6,37 @@ import { renderChart } from "./render-chart.js";
 import { items } from "@/vocabulary.js";
 import config from "@/config.js";
 
+type UserNotesChart = {
+    diffs: {
+        normal: number[];
+				reply: number[];
+				renote: number[];
+    };
+};
+
+type FollowersChart = {
+	local:{
+    followers: {
+        total: number[];
+    };
+	};
+	remote:{
+    followers: {
+        total: number[];
+    };
+	};
+};
+
+type NotesChart = {
+	local: {
+    diffs: {
+        normal: number[];
+				reply: number[];
+				renote: number[];
+    };
+	};
+};
+
 export default class extends Module {
 	public readonly name = "chart";
 
@@ -52,7 +83,7 @@ export default class extends Module {
 				span: "day",
 				limit: 30,
 				userId: params.user.id,
-			});
+			}) as UserNotesChart;
 
 			chart = {
 				title: `@${params.user.username}さんの投稿数`,
@@ -73,7 +104,7 @@ export default class extends Module {
 				span: "day",
 				limit: 30,
 				userId: params.user.id,
-			});
+			}) as FollowersChart;
 
 			chart = {
 				title: `@${params.user.username}さんのフォロワー数`,
@@ -90,7 +121,7 @@ export default class extends Module {
 			const data = await this.subaru.api("charts/notes", {
 				span: "day",
 				limit: 30,
-			});
+			}) as NotesChart;
 
 			chart = {
 				datasets: [

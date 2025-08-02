@@ -53,7 +53,7 @@ export default class extends Module {
 
 		msg.reply(serifs.timer.set);
 
-		const str = `${hours ? hoursQuery![0] : ""}${minutes ? minutesQuery![0] : ""}${seconds ? secondsQuery![0] : ""}`;
+		const str = `${(hours && hoursQuery) ? hoursQuery[0] : ""}${(minutes && minutesQuery) ? minutesQuery[0] : ""}${(seconds && secondsQuery) ? secondsQuery[0] : ""}`;
 
 		// タイマーセット
 		this.setTimeoutWithPersistence(time, {
