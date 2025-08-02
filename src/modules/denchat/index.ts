@@ -184,7 +184,7 @@ export default class extends Module {
 		this.log(JSON.stringify(options));
 		let res_data: any = null;
 		try {
-			const res_data = await got.post(JSON.stringify(options), {
+			const res_data = await got.post(options, {
 				retry: {
 					limit: 3,
 					statusCodes: [500, 503],
@@ -248,7 +248,7 @@ export default class extends Module {
 		this.log(JSON.stringify(options));
 		let res_data:any = null;
 		try {
-			res_data = await got.post(JSON.stringify(options),
+			res_data = await got.post(options,
 				{parseJson: (res: string) => JSON.parse(res)}).json();
 			this.log(JSON.stringify(res_data));
 			if (res_data.hasOwnProperty('choices')) {
