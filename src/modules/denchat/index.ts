@@ -61,6 +61,16 @@ type DenChatUser = {
 	aboutFriend: string;
 };
 
+type SunriseSunsetResponse = {
+    results: {
+        sunrise: string;
+        sunset: string;
+        [key: string]: string | number; // その他のプロパティも許可
+    };
+    status: string;
+    tzid: string;
+};
+
 const KIGO = '&';
 const TYPE_GEMINI = 'gemini';
 const GEMINI_PREVIEW = 'gprev';
@@ -75,12 +85,19 @@ const RANDOMTALK_DEFAULT_PROBABILITY = 0.02;// デフォルトのrandomTalk確�
 const TIMEOUT_TIME = 1000 * 60 * 60 * 1;// denchatの返信を監視する時間
 const RANDOMTALK_DEFAULT_INTERVAL = 1000 * 60 * 60 * 12;// デフォルトのrandomTalk間隔
 
+const SS_API_URL = "https://api.sunrise-sunset.org/json";
+const SS_LAT = 35.6809591;
+const SS_LNG = 139.7673068;
+const SS_TZ = "Asia/Tokyo";
+
 export default class extends Module {
 	public readonly name = 'denchat';
 	private denchatHist!: loki.Collection<DenChatHist>;
 	private denchatUser!: loki.Collection<DenChatUser>;
 	private randomTalkProbability: number = RANDOMTALK_DEFAULT_PROBABILITY;
 	private randomTalkIntervalMinutes: number = RANDOMTALK_DEFAULT_INTERVAL;
+	private sunrise!: Date;
+	private sunset!: Date;
 
 	@bindThis
 	public install() {
@@ -117,6 +134,40 @@ export default class extends Module {
 	}
 
 	@bindThis
+	private async fetchSunTimes(): Promise<{ sunrise: Date; sunset: Date }> {
+		const url = `${SS_API_URL}?lat=${SS_LAT}&lng=${SS_LNG}&formatted=0&tzid=${encodeURIComponent(SS_TZ)}`;
+
+		const res = await fetch(url);
+		if (!res.ok) {
+			this.log(`Sunrise and sunset tme API request failed: ${res.status}(${res.statusText})`);
+		}
+
+		const data: SunriseSunsetResponse = await res.json();
+
+		if (data.status !== "OK") {
+			this.log(`Sunrise and sunset tme API response failed: ${data.status}`);
+		}
+
+		const sunrise = new Date(data.results.sunrise);
+		const sunset = new Date(data.results.sunset);
+
+		return { sunrise, sunset };
+	}
+
+	@bindThis
+	private isYesterday(date: Date): boolean {
+		const now = new Date();
+		const yesterday = new Date(now);
+		yesterday.setDate(now.getDate() - 1);
+
+		return (
+			date.getFullYear() === yesterday.getFullYear() &&
+			date.getMonth() === yesterday.getMonth() &&
+			date.getDate() === yesterday.getDate()
+		);
+	}
+
+	@bindThis
 	private async genTextByGemini(denChat: DenChat, files?: base64File[]) {
 		this.log('Generate Text By Gemini...');
 		let parts: GeminiParts = [];
@@ -128,8 +179,18 @@ export default class extends Module {
 			hour: '2-digit',
 			minute: '2-digit'
 		});
+
+		// 日の出、日の入り時刻の取得
+		if (!this.sunrise || !this.sunset || this.isYesterday(this.sunrise) || this.isYesterday(this.sunset)) {
+			const { sunrise, sunset } = await this.fetchSunTimes();
+			this.sunrise = sunrise;
+			this.sunset = sunset;
+		}
+		const sunriseHM = `${this.sunrise.getHours().toString().padStart(2, "0")}時${this.sunrise.getMinutes().toString().padStart(2, "0")}分`;
+		const sunsetHM  = `${this.sunset.getHours().toString().padStart(2, "0")}時${this.sunset.getMinutes().toString().padStart(2, "0")}分`;
+
 		// 設定のプロンプトに加え、現在時刻を渡す
-		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "(日本時間)である。この日時は季節や時間帯など回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
+		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "(日本時間)で、今日の日の出が" + sunriseHM + "、今日の日の入りは" + sunsetHM + "である。この日時は季節や時間帯など回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
 		// 名前を伝えておく
 		if (denChat.friendName != undefined) {
 			systemInstructionText += "なお、会話相手の名前は「" + denChat.friendName + "」とする。現時点でのユーザーの特徴は「" + denChat.aboutFriend + "」です。";
