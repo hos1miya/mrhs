@@ -24,6 +24,7 @@ export default class extends Module {
 	private learnedKeywords!: loki.Collection<{
 		keyword: string;
 		learnedAt: number;
+		lastIntroducedAt?: number;
 	}>;
 
 	@bindThis
@@ -128,7 +129,18 @@ export default class extends Module {
 	private async keywordNote() {
 		if (this.learnedKeywords.data.length === 0) return;
 
-		const keyword = this.learnedKeywords.data[Math.floor(Math.random() * this.learnedKeywords.data.length)].keyword;
+		let process = false;
+		let keyword;
+		while (!process) {
+			const keywordData = this.learnedKeywords.data[Math.floor(Math.random() * this.learnedKeywords.data.length)];
+			// 最終紹介が無し or 最終紹介から30日以上経過していればその単語を紹介
+			if (!keywordData.lastIntroducedAt || keywordData.lastIntroducedAt + 1000 * 60 * 60 * 24 * 30 < Date.now()) {
+				keyword = keywordData.keyword;
+				keywordData.lastIntroducedAt = Date.now();
+				this.learnedKeywords.update(keywordData);
+				process = true;
+			}
+		}
 		const denchatModule = this.subaru.modules.find((m) => m.name === 'denchat') as Denchat;
 
 		return await denchatModule.noteAboutKeyword(keyword);
