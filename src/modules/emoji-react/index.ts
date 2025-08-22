@@ -13,11 +13,11 @@ export default class extends Module {
 
 	private htl!: ReturnType<Stream["useSharedConnection"]>;
 
-		private reationFlag!: loki.Collection<{
-			id: string;
-			enabled: boolean;
-			updatedAt: number;
-		}>;
+	private reationFlag!: loki.Collection<{
+		id: string;
+		enabled: boolean;
+		updatedAt: number;
+	}>;
 
 	@bindThis
 	public install() {

@@ -4,6 +4,8 @@ import serifs from "@/serifs.js";
 import Message from "@/message.js";
 import config from "@/config.js";
 
+const REBOOT_CANCEL_DURATION = 60;
+
 export default class extends Module {
 	public readonly name = 'serverObserve';
 
@@ -26,7 +28,7 @@ export default class extends Module {
 	private async checkDeliverDelay() {
 		const now = new Date();
 		if (now.getMinutes() % 5 !== 0) return;
-		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * 20) return;
+		if (this.lastRebootCanceled && now < this.lastRebootCanceled + 1000 * 60 * REBOOT_CANCEL_DURATION) return;
 
 		const data: [string, number, boolean][] = await this.subaru.api('admin/queue/deliver-delayed', {}) as [string, number, boolean][];
 
