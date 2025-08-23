@@ -191,12 +191,13 @@ export default class extends Module {
 
 		// 設定のプロンプトに加え、現在時刻を渡す
 		let systemInstructionText = denChat.prompt + "。また、現在日時は" + now + "(日本時間)で、今日の日の出が" + sunriseHM + "、今日の日の入りは" + sunsetHM + "である。この日時は季節や時間帯など回答の参考にし、時刻を聞かれるまで時刻情報は提供しないこと(なお、他の日時は無効とすること)。言語は日本語を使用してください。";
-		// 名前を伝えておく
+		// ユーザー相手であれば、名前と特徴を伝えておく
 		if (denChat.friendName != undefined) {
 			systemInstructionText += "なお、会話相手の名前は「" + denChat.friendName + "」とする。現時点でのユーザーの特徴は「" + denChat.aboutFriend + "」です。";
-		}
-		if (denChat.visibility && denChat.visibility !== 'specified') {
-			systemInstructionText += "文章の最後に、現時点での会話相手の特徴や今回の会話内容を踏まえて特徴をアップデートし、<about>タグで囲う形で追記すること。特徴は長くても140文字程度に抑えてください。";
+			// 公開範囲DM以外なら特徴のアップデートを要求
+			if (denChat.visibility && denChat.visibility !== 'specified') {
+				systemInstructionText += "文章の最後に、現時点での会話相手の特徴や今回の会話内容を踏まえて特徴をアップデートし、<about>タグで囲う形で追記すること。特徴は長くても140文字程度に抑えてください。";
+			}
 		}
 		const systemInstruction: GeminiSystemInstruction = {role: 'system', parts: [{text: systemInstructionText}]};
 
@@ -243,7 +244,6 @@ export default class extends Module {
 			];
 		}
 		this.log(JSON.stringify(options));
-		let res_data: any = null;
 		try {
 			const res_data = await got.post(options, {
 				retry: {
@@ -261,7 +261,7 @@ export default class extends Module {
 							if (res_data.candidates[0].content.parts.length > 0) {
 								if (res_data.candidates[0].content.parts[0].hasOwnProperty('text')) {
 									const responseText = res_data.candidates[0].content.parts[0].text;
-									if (responseText.startsWith('The search results') || responseText.startsWith('思考プロセス')) {
+									if (responseText.includes('search results') || responseText.includes('思考プロセス')) {
 										throw new Error('Invalid text generated(may contain prompts)');
 									}
 									return responseText;
