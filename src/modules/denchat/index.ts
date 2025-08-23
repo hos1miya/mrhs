@@ -882,7 +882,7 @@ export default class extends Module {
 			prompt = config.prompt;
 		}
 
-		let question = `今から「${displayName}」というユーザーのMisskeyの投稿内容を教えるので、投稿内容からそのユーザーの特徴を客観的に分析してください。各投稿は3行分の改行で区切られています。返答は長くなっても構いません。箇条書きで見やすく整理してください。\n以下、投稿内容\n\n\n`;
+		let question = `今から「${displayName}」というユーザーのMisskeyの投稿内容を教えるので、投稿内容からそのユーザーの特徴を客観的に分析してください。そのユーザーは私とは限りません。各投稿は3行分の改行で区切られています。返答は長くなっても構いません。箇条書きで見やすく整理してください。\n以下、投稿内容\n\n\n`;
 		for (const noteText of noteTexts) {
 			question += `${noteText}\n\n\n`;
 		}
