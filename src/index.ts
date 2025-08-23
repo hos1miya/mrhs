@@ -43,6 +43,7 @@ import DenChatModule from "./modules/denchat/index.js";
 import ServerObserveModule from "./modules/server-observe/index.js";
 import HashModule from "./modules/hash/index.js";
 import WeatherModule from "./modules/weather/index.js";
+import ParsingUserModule from "./modules/parsing-user/index.js";
 
 console.log(" ____    _____   _   _   _____   _____    __         __  ");
 console.log("|    \\  | ____| | \\ | | |  ___| |  _  |  / _| _   _ |_ \\ ");
@@ -120,6 +121,7 @@ promiseRetry(
 			new FollowModule(),					// フォロー
 			new KeywordModule(),				// 単語紹介
 			new HashModule(),						// ハッシュ計算
+			new ParsingUserModule(),		// ユーザー解析
 
 			// mentionHook無しモジュール
 			new EmojiReactModule(),

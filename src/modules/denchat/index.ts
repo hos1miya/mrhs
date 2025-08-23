@@ -871,5 +871,44 @@ export default class extends Module {
 		return true;
 
 	}
+
+	// ユーザー解析
+	public async parsingUser(displayName: string, noteTexts: string[], msg: Message): Promise<boolean> {
+		this.log('WeatherNote started');
+
+		let text: string, denChat: DenChat;
+		let prompt: string = '';
+		if (config.prompt) {
+			prompt = config.prompt;
+		}
+
+		let question = `今から「${displayName}」というユーザーのMisskeyの投稿内容を教えるので、投稿内容からそのユーザーの特徴を分析してください。各投稿は3行分の改行で区切られています。\n以下、投稿内容\n\n\n`;
+		for (const noteText of noteTexts) {
+			question += `${noteText}\n\n\n`;
+		}
+
+		// geminiの場合、APIキーが必須
+		if (!config.geminiApiKey) {
+			return false;
+		}
+
+		denChat = {
+			question: question,
+			prompt: prompt,
+			api: GEMINI_25_FLASH_API,
+			key: config.geminiApiKey
+		};
+
+		// Gemini問い合わせ
+		text = await this.genTextByGemini(denChat);
+		if (text == null) {
+			msg.reply(serifs.denchat.error);
+			return false;
+		}
+	
+		this.log('Noting...');
+		msg.reply(text);
+		return true;
+	}
 }
 
